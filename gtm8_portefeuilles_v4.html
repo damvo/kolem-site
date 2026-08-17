@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#112821">
+<title>Kolem · Ce que Kolem retrouve dans un portefeuille éolien</title>
+<meta name="description" content="Vingt portefeuilles éoliens reconstitués sur données publiques&#8239;: sociétés de projet, décisions de cour administrative d’appel regroupées par affaire, chronologie et état au dernier état identifié.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=JetBrains+Mono:wght@400..700&family=Newsreader:opsz,wght@6..72,300..600&display=swap" rel="stylesheet">
+<style>:root{--grain:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E")}
+@layer reset, base, layout, components, motion, print;
+
+/* ============================================================ TOKENS */
+:root{
+  color-scheme: light dark;
+
+  /* palette de marque Kolem */
+  --k-dark:#112821; --k-dark2:#0D241E; --k-green:#749E67;
+  --k-sage:#ACCA95; --k-sand:#CFC4AE;
+
+  --paper: light-dark(#EEEAE5, #141F1B);
+  --card:  light-dark(#F6F3EE, #1B2A24);
+  --ink:   light-dark(#1C2B25, #E6E3DC);
+  --ink2:  light-dark(#3A4A42, #B4BDB2);
+  --ink3:  light-dark(#5C6B62, #9DAA9F);
+  --rule:  light-dark(#D6CEC2, #2A3B33);
+  --rule2: light-dark(#E4DED5, #223129);
+  --hair:  light-dark(#C7BCA9, #31423A);
+
+  --annul:    light-dark(#93301F, #E08D74);
+  --maintien: light-dark(#3C6B32, #ACCA95);
+  --cours:    light-dark(#856214, #D3AA5C);
+  --clos:     light-dark(#55635B, #A3AFA8);
+  --indet:    light-dark(#736558, #C2B096);
+
+  --band:      light-dark(#112821, #0D1A16);
+  --band-ink:  #EEEAE5;
+  --band-ink2: light-dark(#B9C3B6, #A5B0A6);
+  --band-ink3: light-dark(#8C9A8E, #8C9A8E);
+  --band-rule: light-dark(#22392F, #1C2E27);
+
+  --display:'Fraunces','Fraunces Fallback',Georgia,'Times New Roman',serif;
+  --serif:'Newsreader','Newsreader Fallback',Georgia,'Times New Roman',serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  --rail-h:53px;
+  --gut:clamp(18px,3.4vw,40px);
+  --maxw:1220px;
+
+  --t-xs:11px; --t-sm:13px; --t-md:15px; --t-lg:17px;
+  --t-h2:clamp(19px,2.1vw,25px);
+  --t-h1:clamp(38px,6.6vw,84px);
+  --t-num:clamp(30px,4.4vw,54px);
+}
+@property --prog{syntax:'<number>';inherits:false;initial-value:0}
+
+/* ============================================================ RESET */
+@layer reset{
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:calc(var(--rail-h) + 12px)}
+  img,svg{display:block;max-width:100%}
+  button{font:inherit;color:inherit;background:none;border:0}
+  table{border-collapse:collapse}
+  ul{list-style:none}
+  a{color:inherit}
+}
+
+/* ============================================================ BASE */
+@layer base{
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:var(--serif); font-size:var(--t-lg); line-height:1.55;
+    font-variant-numeric:tabular-nums lining-nums;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  h1,h2,h3,h4{font-weight:inherit;text-wrap:balance}
+  p{text-wrap:pretty}
+  :focus-visible{outline:2px solid var(--annul);outline-offset:3px}
+  .band :focus-visible{outline-color:var(--k-sage)}
+  .skip{position:absolute;left:-9999px}
+  .skip:focus{position:fixed;left:12px;top:12px;z-index:99;background:var(--k-dark);color:#fff;
+    padding:9px 14px;font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.08em}
+
+  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gut)}
+  .mono{font-family:var(--mono)}
+  .nw{white-space:nowrap}
+  .eyebrow{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--ink3);line-height:1.6}
+  .sec{padding-block:clamp(46px,6.5vw,84px) 0;scroll-margin-top:calc(var(--rail-h) + 10px)}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+    flex-wrap:wrap;padding-bottom:11px;border-bottom:1.5px solid var(--ink)}
+  .sec-head p{font-size:var(--t-sm);color:var(--ink3);font-family:var(--mono);letter-spacing:.03em}
+}
+
+/* ============================================================ RAIL */
+@layer layout{
+  .rail{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--paper) 88%,transparent);
+    backdrop-filter:blur(9px) saturate(1.4);border-bottom:1px solid var(--rule)}
+  .rail-in{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gut);
+    height:var(--rail-h);display:flex;align-items:center;gap:clamp(12px,2.4vw,30px)}
+  .rail .mark{font-family:var(--mono);font-size:var(--t-sm);font-weight:700;letter-spacing:.26em;
+    text-transform:uppercase;flex:none;text-decoration:none}
+  .rail nav{display:flex;gap:clamp(9px,1.7vw,22px);overflow-x:auto;scrollbar-width:none;
+    margin-inline:auto 0}
+  .rail nav::-webkit-scrollbar{display:none}
+  .rail nav a{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.09em;
+    text-transform:uppercase;color:var(--ink3);text-decoration:none;white-space:nowrap;
+    padding-block:5px;border-bottom:1.5px solid transparent;transition:color .16s,border-color .16s}
+  .rail nav a:hover{color:var(--ink);border-bottom-color:var(--hair)}
+  .rail .go{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.09em;text-transform:uppercase;
+    border:1px solid var(--ink);padding:6px 12px;text-decoration:none;flex:none;
+    transition:background .16s,color .16s}
+  .rail .go:hover{background:var(--ink);color:var(--paper)}
+  .prog{position:absolute;inset-inline:0;bottom:-1px;height:1.5px;background:var(--annul);
+    transform-origin:0 50%;transform:scaleX(0)}
+}
+
+/* ============================================================ BANDEAU */
+@layer components{
+  .band{background:var(--band);color:var(--band-ink);position:relative;isolation:isolate}
+  .band::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;
+    background-image:var(--grain);background-size:180px 180px;pointer-events:none}
+  .band a{color:inherit}
+
+  .hero{padding-block:clamp(34px,5vw,64px) 0}
+  .hero .kicker{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--band-ink3);padding-bottom:15px;border-bottom:1px solid var(--band-rule)}
+  h1{font-family:var(--display);font-optical-sizing:auto;font-weight:400;
+    font-variation-settings:'SOFT' 0,'WONK' 1;
+    font-size:var(--t-h1);line-height:.98;letter-spacing:-.028em;color:#fff;
+    margin-block:clamp(24px,3.6vw,42px) 0;max-width:15ch}
+  h1 em{font-style:normal;color:var(--k-sage)}
+  .hero .lede{margin-top:clamp(20px,2.6vw,30px);max-width:56ch;font-size:clamp(16px,1.5vw,19px);
+    color:var(--band-ink2);font-weight:300}
+  .hero .lede b{color:#fff;font-weight:500}
+  .hero .lede + .lede{margin-top:11px}
+
+  /* --- bento des chiffres --- */
+  .bento{display:grid;gap:1px;background:var(--band-rule);border:1px solid var(--band-rule);
+    grid-template-columns:repeat(12,1fr);margin-top:clamp(30px,4vw,50px)}
+  .bt{background:var(--band);padding:17px 18px 19px;position:relative}
+  .bt b{display:block;font-family:var(--display);font-optical-sizing:auto;font-weight:400;
+    font-size:var(--t-num);line-height:1.06;letter-spacing:-.03em;color:#fff}
+  .bt-date{grid-column:span 4}
+  .bt-date b{font-size:clamp(23px,2.9vw,38px);letter-spacing:-.015em}
+  .bt span{display:block;margin-top:7px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--band-ink3);line-height:1.5}
+  .bt-2{grid-column:span 2} .bt-3{grid-column:span 3} .bt-4{grid-column:span 4}
+  .bt-note{grid-column:1/-1;display:flex;flex-direction:column;justify-content:center}
+  .bt-note p{font-size:var(--t-md);color:var(--band-ink2);font-weight:300;max-width:96ch}
+  .bt-note p em{font-style:italic;color:var(--k-sand)}
+  .band-foot{padding-block:16px clamp(28px,3.6vw,42px);margin-top:14px;
+    border-top:1px solid var(--band-rule);font-family:var(--mono);font-size:var(--t-xs);
+    line-height:1.85;letter-spacing:.02em;color:var(--band-ink3);max-width:104ch}
+  .band-foot b{color:var(--band-ink2);font-weight:500}
+
+  /* --- constats : bento asymétrique --- */
+  .constats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);
+    border-block:1px solid var(--rule);margin-top:1px}
+  .co{background:var(--paper);padding:clamp(22px,2.6vw,32px) clamp(18px,2vw,26px)}
+  .co .n{display:block;font-family:var(--display);font-optical-sizing:auto;font-weight:400;
+    font-size:var(--t-num);line-height:1;letter-spacing:-.03em;color:var(--ink)}
+  .co .n i{font-style:normal;font-size:.42em;letter-spacing:0;color:var(--ink3);
+    font-family:var(--serif);vertical-align:.34em;margin-left:.28em}
+  .co .n u{text-decoration:none;color:var(--maintien);font-size:.72em;margin-inline:.1em;
+    vertical-align:.08em}
+  .co h3{font-family:var(--display);font-weight:600;font-size:var(--t-lg);margin:14px 0 8px;
+    letter-spacing:-.012em}
+  .co p{font-size:var(--t-md);color:var(--ink2);font-weight:350;line-height:1.62}
+  .co p b{font-weight:600;color:var(--ink)}
+
+  /* --- preuve avant / après --- */
+  .duo{display:grid;grid-template-columns:1fr auto 1fr;gap:0;margin-top:20px;
+    border:1px solid var(--rule);background:var(--card)}
+  .duo>section{padding:clamp(19px,2.2vw,26px) clamp(17px,1.9vw,24px)}
+  .duo>section:last-child{background:var(--paper)}
+  .duo h3{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink3);font-weight:500;padding-bottom:12px;border-bottom:1px solid var(--rule2);
+    margin-bottom:15px}
+  .duo>section:last-child h3{color:var(--ink)}
+  .arrow{display:flex;align-items:center;justify-content:center;padding-inline:6px;
+    border-inline:1px solid var(--rule);background:var(--card)}
+  .arrow span{font-family:var(--mono);font-size:15px;color:var(--maintien)}
+  .brute li{display:flex;gap:13px;align-items:baseline;font-size:var(--t-sm);color:var(--ink2);
+    padding:10px 0;border-bottom:1px dotted var(--rule)}
+  .brute .dd{font-family:var(--mono);font-size:12px;color:var(--ink3);flex:none;width:104px}
+  .brute .nn{font-family:var(--mono);font-size:12px;font-weight:600;flex:none}
+  .brute-note,.rec-note{margin-top:15px;font-size:var(--t-sm);color:var(--ink2);font-weight:350;line-height:1.62}
+  .brute-note{font-style:italic}
+  .rec-note b{font-weight:600;color:var(--ink)}
+  .rec-tete{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-bottom:2px}
+
+  /* --- barre de répartition --- */
+  .barre{display:flex;height:12px;overflow:hidden;background:var(--rule2);gap:1px}
+  .seg{display:block}
+  .s-annul{background:var(--annul)} .s-maintien{background:var(--maintien)}
+  .s-cours{background:var(--cours)} .s-clos{background:var(--clos)} .s-indet{background:var(--indet)}
+  .leg{display:flex;flex-wrap:wrap;gap:7px 26px;margin-top:13px;font-size:var(--t-sm);color:var(--ink2)}
+  .lg{display:flex;align-items:center;gap:8px}
+  .lg b{font-family:var(--mono);font-weight:600;color:var(--ink);font-size:12.5px}
+  .pastille{width:9px;height:9px;flex:none}
+
+  .repart{margin-top:23px}
+
+  /* --- filtres --- */
+  .filtres{display:flex;flex-wrap:wrap;gap:7px;margin-top:22px}
+  .fl{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.05em;
+    border:1px solid var(--rule);color:var(--ink2);padding:7px 12px;cursor:pointer;
+    transition:background .16s,border-color .16s,color .16s}
+  .fl i{font-style:normal;color:var(--ink3);margin-left:7px}
+  .fl:hover{border-color:var(--ink3)}
+  .fl[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .fl[aria-pressed="true"] i{color:color-mix(in srgb,var(--paper) 68%,var(--ink))}
+  .hint{margin-top:15px;font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;
+    text-transform:uppercase;color:var(--ink3);line-height:1.7}
+
+  /* --- tableau --- */
+  .tbl-wrap{margin-top:9px;overflow-x:auto}
+  table.idx{width:100%;font-size:var(--t-md)}
+  table.idx col.w1{width:106px} table.idx col.w2{width:122px}
+  table.idx col.w3{width:56px}  table.idx col.w4{width:134px}
+  table.idx th{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--ink3);font-weight:500;text-align:left;padding:9px 22px 9px 0;
+    border-bottom:1.5px solid var(--ink);white-space:nowrap}
+  table.idx td{padding:11px 22px 11px 0;border-bottom:1px solid var(--rule2);vertical-align:baseline}
+  table.idx th:last-child,table.idx td:last-child{padding-right:0}
+  table.idx th.r,table.idx td.r{text-align:right;padding-right:26px}
+  table.idx tbody tr{transition:background .14s}
+  table.idx tbody tr:hover{background:var(--card)}
+  table.idx tr[hidden]{display:none}
+  table.idx .lien{font-family:var(--mono);font-size:var(--t-sm);font-weight:700;text-decoration:none;
+    border-bottom:1px solid var(--hair)}
+  table.idx .lien:hover{border-bottom-color:var(--ink)}
+  .op-c{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--ink3);white-space:nowrap}
+  .c-date{white-space:nowrap}
+  .sit{display:inline-flex;align-items:center;gap:8px;font-size:var(--t-sm);white-space:nowrap}
+  .sit::before{content:"";width:9px;height:9px;background:currentColor;flex:none}
+  .sit-annulation{color:var(--annul)} .sit-ouverte{color:var(--cours)}
+  .sit-noncaract{color:var(--indet)} .sit-maintien{color:var(--maintien)} .sit-aucune{color:var(--clos)}
+  .mk{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.07em;
+    color:var(--ink2);border:1px solid var(--rule);padding:2px 6px;margin:0 4px 3px 0;white-space:nowrap}
+  .dnum{font-family:var(--mono);font-size:var(--t-sm);color:var(--ink2)}
+  .tiret{color:var(--ink3)}
+
+  /* --- registre --- */
+  .bande{position:sticky;top:var(--rail-h);z-index:20;
+    background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(7px);
+    display:flex;align-items:baseline;gap:13px;flex-wrap:wrap;
+    margin-top:clamp(34px,4vw,52px);padding-block:11px 9px;border-bottom:1.5px solid var(--ink)}
+  .bande:first-of-type{margin-top:22px}
+  .bande h3{font-family:var(--mono);font-size:11.5px;letter-spacing:.17em;text-transform:uppercase;font-weight:700}
+  .bande .cpt{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:.07em}
+  .bande p{font-size:var(--t-sm);color:var(--ink2);font-weight:350;flex:1 1 320px}
+  .bande[hidden]{display:none}
+
+  .pf{container-type:inline-size;display:grid;grid-template-columns:230px minmax(0,1fr);
+    gap:0 clamp(20px,3vw,40px);padding-block:24px 27px;border-bottom:1px solid var(--rule);
+    scroll-margin-top:calc(var(--rail-h) + 46px);position:relative}
+  .pf[hidden]{display:none}
+  .pf::before{content:"";position:absolute;inset-block:0;left:calc(var(--gut) * -1);width:2px;
+    background:transparent;transition:background .2s}
+  .pf:target::before{background:var(--annul)}
+  .pf:target{background:color-mix(in srgb,var(--card) 70%,transparent)}
+  .rail-pf h4{font-family:var(--mono);font-size:17px;font-weight:700;letter-spacing:-.005em}
+  .rail-pf .op{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink3);margin-top:4px}
+  .rail-pf .cnt{font-size:var(--t-sm);color:var(--ink2);margin-top:15px}
+  .rail-pf .barre{margin-top:10px;height:6px;max-width:150px}
+  .releve{margin-top:11px;font-size:12.5px;line-height:1.55;font-family:var(--mono)}
+  .releve span{display:block}
+  .t-annul{color:var(--annul)} .t-maintien{color:var(--maintien)}
+  .t-cours{color:var(--cours)} .t-clos{color:var(--clos)} .t-indet{color:var(--indet)}
+  .mks{margin-top:12px}
+
+  .lecture{border-left:2px solid var(--ink);padding:1px 0 1px 15px;
+    margin-bottom:17px;font-size:var(--t-md);color:var(--ink2);font-weight:350;line-height:1.6}
+  .lecture .lab{font-family:var(--mono);font-size:9px;letter-spacing:.19em;
+    text-transform:uppercase;color:var(--ink3);margin-right:11px;padding-right:11px;
+    border-right:1px solid var(--rule);white-space:nowrap}
+  .lecture b{font-weight:600;color:var(--ink)}
+  .lecture-annulation{border-left-color:var(--annul)} .lecture-ouverte{border-left-color:var(--cours)}
+  .lecture-maintien{border-left-color:var(--maintien)} .lecture-noncaract{border-left-color:var(--indet)}
+  .lecture-aucune{border-left-color:var(--clos)}
+
+  .aff{padding:13px 0 4px;border-top:1px solid var(--rule2)}
+  .aff:first-of-type{padding-top:0;border-top:0}
+  .aff-tete{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px}
+  .num{font-family:var(--mono);font-size:14.5px;font-weight:700}
+  .cour{font-size:var(--t-sm);color:var(--ink3)}
+  .etapes{font-family:var(--mono);font-size:10px;letter-spacing:.07em;color:var(--ink2);
+    border:1px solid var(--rule);padding:2px 7px}
+  .issue{margin-left:auto;font-size:var(--t-sm);font-weight:500;display:flex;align-items:center;gap:9px}
+  .issue::before{content:"";width:9px;height:9px;background:currentColor;flex:none}
+  .i-annul{color:var(--annul)} .i-maintien{color:var(--maintien)}
+  .i-cours{color:var(--cours)} .i-clos{color:var(--clos)} .i-indet{color:var(--indet)}
+  .suite{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--ink3);border-left:1px solid var(--rule);padding-left:9px;font-weight:400}
+
+  .axe{position:relative;height:19px;margin-top:12px}
+  .axe .rule{position:absolute;inset-inline:0;top:9px;height:1px;background:var(--rule)}
+  .axe .lien-t{position:absolute;top:8px;height:3px;opacity:.4}
+  .l-annul{background:var(--annul)} .l-maintien{background:var(--maintien)}
+  .l-cours{background:var(--cours)} .l-clos{background:var(--clos)} .l-indet{background:var(--indet)}
+  .pt{position:absolute;top:4px;width:11px;height:11px;margin-left:-5.5px;border-radius:50%;
+    background:var(--paper);border:2px solid var(--indet)}
+  .p-annul{border-color:var(--annul)} .p-maintien{border-color:var(--maintien)}
+  .p-cours{border-color:var(--cours)} .p-clos{border-color:var(--clos)} .p-indet{border-color:var(--indet)}
+  .pt-last.p-annul{background:var(--annul)} .pt-last.p-maintien{background:var(--maintien)}
+  .pt-last.p-cours{background:var(--cours)} .pt-last.p-clos{background:var(--clos)}
+  .pt-last.p-indet{background:var(--indet)}
+  .pt.hi{box-shadow:0 0 0 4px color-mix(in srgb,var(--ink) 12%,transparent)}
+  .axe-cap{position:absolute;right:0;inset-block:1px;border-right:1px dashed var(--hair)}
+
+  .decs{margin-top:10px;display:flex;flex-wrap:wrap;gap:5px 24px}
+  .decs li{display:flex;align-items:baseline;gap:9px;font-size:var(--t-sm)}
+  .dt{font-family:var(--mono);font-size:12px;color:var(--ink2);text-decoration:none;
+    border-bottom:1px solid var(--rule);padding-bottom:1px;white-space:nowrap;transition:color .14s,border-color .14s}
+  .dt:hover{color:var(--ink);border-bottom-color:var(--ink)}
+  .dt::after{content:"↗";font-size:9px;vertical-align:super;margin-left:3px;color:var(--ink3)}
+  .retenu{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3)}
+  .fg{font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--ink2);
+    border:1px solid var(--rule2);background:var(--card);padding:2px 7px}
+  .vide-txt{font-size:var(--t-md);color:var(--ink2);font-weight:350;max-width:64ch}
+  .vide-axe{position:relative;height:14px;margin:4px 0 13px}
+  .vide-axe .rule{position:absolute;inset-inline:0;top:6px;border-top:1px dashed var(--hair)}
+
+  /* --- lexique / périmètre --- */
+  dl.def{margin-top:19px;display:grid;grid-template-columns:266px minmax(0,1fr);gap:0 clamp(20px,3vw,40px)}
+  dl.def dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink);padding:16px 0 5px;border-top:1px solid var(--rule2)}
+  dl.def dd{font-size:var(--t-md);color:var(--ink2);font-weight:350;padding:16px 0;
+    border-top:1px solid var(--rule2);line-height:1.62}
+  dl.def dt:first-of-type,dl.def dd:first-of-type{border-top:0;padding-top:19px}
+  dl.def dt .pastille{display:inline-block;margin-right:8px;vertical-align:middle}
+
+  /* --- clôture --- */
+  .cta{margin-top:clamp(58px,7vw,88px);padding-block:clamp(34px,4.4vw,54px)}
+  .cta h2{font-family:var(--display);font-optical-sizing:auto;font-weight:400;
+    font-variation-settings:'SOFT' 0,'WONK' 1;
+    font-size:clamp(27px,4.4vw,46px);line-height:1.04;letter-spacing:-.026em;color:#fff;max-width:19ch}
+  .cta .lede{margin-top:17px;max-width:60ch;color:var(--band-ink2);font-size:var(--t-lg);font-weight:300}
+  .duo-cta{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--band-rule);
+    border:1px solid var(--band-rule);margin-top:clamp(26px,3.2vw,38px)}
+  .duo-cta>div{background:var(--band);padding:19px 21px 22px}
+  .duo-cta h3{font-family:var(--mono);font-size:10px;letter-spacing:.19em;text-transform:uppercase;
+    color:var(--band-ink3);font-weight:500;margin-bottom:12px}
+  .duo-cta li{padding:4px 0 4px 19px;position:relative;font-size:var(--t-md);
+    color:var(--band-ink2);font-weight:300;line-height:1.55}
+  .duo-cta li::before{content:"";position:absolute;left:0;top:.72em;width:6px;height:6px;
+    background:var(--k-sage)}
+  .contact{margin-top:clamp(26px,3.2vw,36px);display:flex;flex-wrap:wrap;gap:12px 14px;align-items:center}
+  .contact a{font-family:var(--mono);font-size:var(--t-sm);letter-spacing:.09em;text-decoration:none;
+    border:1px solid var(--band-rule);padding:11px 18px;transition:background .16s,color .16s,border-color .16s}
+  .contact a.pri{background:var(--k-sage);color:var(--k-dark);border-color:var(--k-sage);font-weight:700}
+  .contact-note{margin-top:11px;font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.04em;
+    color:var(--band-ink3)}
+  .contact a.pri:hover{background:#fff;border-color:#fff}
+  .contact a:not(.pri):hover{border-color:var(--band-ink2);background:color-mix(in srgb,#fff 7%,transparent)}
+  footer{padding-block:22px 58px;display:flex;flex-wrap:wrap;gap:9px 30px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;color:var(--ink3);
+    border-top:1px solid var(--rule);margin-top:clamp(40px,5vw,64px)}
+  footer b{color:var(--ink2);font-weight:700;letter-spacing:.24em}
+}
+
+/* ============================================================ CONTAINER QUERIES */
+@container (max-width:640px){
+  .aff-tete .issue{margin-left:0;width:100%}
+}
+
+/* ============================================================ RESPONSIVE */
+@media (max-width:1000px){
+  .constats{grid-template-columns:1fr}
+  .bento{grid-template-columns:repeat(6,1fr)}
+  .bt-date{grid-column:span 6}
+  .duo{grid-template-columns:1fr}
+  .arrow{border-inline:0;border-block:1px solid var(--rule);padding-block:7px}
+  .arrow span{transform:rotate(90deg);display:block}
+  .duo-cta{grid-template-columns:1fr}
+  .pf{grid-template-columns:1fr;gap:15px}
+  .rail-pf{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 15px}
+  .rail-pf .cnt,.rail-pf .mks{margin-top:0}
+  .rail-pf .barre,.releve{display:none}
+  dl.def{grid-template-columns:1fr}
+  dl.def dd{padding-top:0;border-top:0}
+  dl.def dt{padding-bottom:7px}
+  dl.def dd:first-of-type{padding-top:0}
+  table.idx .h-op,table.idx .c-op,table.idx .h-mk,table.idx .c-mk{display:none}
+}
+@media (max-width:640px){
+  .bento{grid-template-columns:repeat(4,1fr)}
+  .bt-2,.bt-3,.bt-4{grid-column:span 2}
+  .bt-date{grid-column:span 4}
+  .rail nav{display:none}
+  table.idx col{width:auto}
+  table.idx .h-dec,table.idx .c-dec,table.idx .h-date,table.idx .c-date{display:none}
+  table.idx th{white-space:normal;line-height:1.45}
+  table.idx .sit{white-space:normal}
+  table.idx th,table.idx td{padding:9px 13px 9px 0}
+  table.idx th.r,table.idx td.r{padding-right:13px}
+  h1{max-width:none}
+}
+
+/* ============================================================ MOTION */
+@layer motion{
+  @supports (animation-timeline:scroll()){
+    @media (prefers-reduced-motion:no-preference){
+      .prog{animation:prog linear;animation-timeline:scroll(root block)}
+      @keyframes prog{to{transform:scaleX(1)}}
+      /* La révélation ne porte QUE sur des blocs toujours plus courts qu'une fenêtre :
+         sur un bloc plus haut que la fenêtre, la phase « entry » est dégénérée et
+         l'élément pourrait rester invisible. */
+      .rv>.sec-head, .rv .co, .rv .duo>section, .rv .repart, .rv .filtres,
+      .rv dl.def>dt, .rv dl.def>dd, .bento .bt{
+        animation:rv linear both;animation-timeline:view();animation-range:entry 0% entry 100%}
+      @keyframes rv{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:none}}
+      /* En dessous de 900 px, les hauteurs de bloc deviennent imprévisibles : on coupe. */
+      @media (max-width:900px){
+        .rv>.sec-head, .rv .co, .rv .duo>section, .rv .repart, .rv .filtres,
+        .rv dl.def>dt, .rv dl.def>dd, .bento .bt{animation:none;opacity:1;transform:none}
+      }
+    }
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}
+    html{scroll-behavior:auto}}
+}
+
+/* ============================================================ IMPRESSION */
+@layer print{
+  @media print{
+    :root{--paper:#fff;--card:#fff;--ink:#000;--ink2:#333;--ink3:#555;
+          --rule:#ccc;--rule2:#ddd;--hair:#bbb;--band:#fff;--band-ink:#000;
+          --band-ink2:#333;--band-ink3:#666;--band-rule:#ccc}
+    body{font-size:10.5pt}
+    .band::before{display:none}
+    h1,.cta h2{color:#000}
+    .rail,.filtres,.hint,.contact,.prog{display:none}
+    .dt::after{content:" [" attr(data-file) "]";font-size:7pt;color:#555;vertical-align:baseline;margin:0}
+    .pf,.co,.duo,.aff,.bt{break-inside:avoid}
+    .bande{position:static;break-after:avoid}
+    a{text-decoration:none}
+    .rv>.sec-head,.rv .co,.rv .duo>section,.rv .repart,.rv .filtres,
+    .rv dl.def>dt,.rv dl.def>dd,.bento .bt{animation:none;opacity:1;transform:none}
+  }
+}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Kolem — portefeuilles éoliens reconstitués sur données publiques","description":"Démonstration Kolem : 20 portefeuilles de sociétés de projet éoliennes, 55 affaires et 74 décisions de cours administratives d’appel regroupées par affaire, avec l’issue juridique au dernier état identifié.","inLanguage":"fr","creator":{"@type":"Organization","name":"Kolem","url":"https://kolem.fr"},"isBasedOn":{"@type":"Dataset","name":"Open data de la justice administrative","url":"https://opendata.justice-administrative.fr","creator":{"@type":"Organization","name":"Conseil d’État"}},"temporalCoverage":"2022-01-01/2026-06-26","spatialCoverage":{"@type":"Place","name":"France"},"variableMeasured":["Autorisation annulée","Autorisation maintenue","Instance non close","Instance close sans examen au fond","Issue non caractérisée"],"size":"74 décisions"}</script>
+</head>
+<body>
+<a class="skip" href="#ensemble">Aller à la vue d’ensemble</a>
+<div class="rail">
+ <div class="rail-in">
+  <a class="mark" href="#haut">Kolem</a>
+  <nav aria-label="Sections de la page"><a href="#methode">Méthode</a><a href="#preuve">Preuve</a><a href="#ensemble">Vue d’ensemble</a><a href="#registre">Portefeuilles</a><a href="#lexique">Lexique</a><a href="#perimetre">Périmètre</a></nav>
+  <a class="go" href="#suite">Sur vos sociétés</a>
+ </div><span class="prog" role="presentation"></span></div>
+<header class="band" id="haut">
+ <div class="wrap hero">
+  <p class="kicker"><span>Kolem · démonstration</span><span>Sources publiques · éolien terrestre</span></p>
+  <h1>Ce que Kolem retrouve dans un <em>portefeuille éolien</em></h1>
+  <p class="lede">Vingt portefeuilles reconstitués à partir des seules décisions publiées&#8239;: quelles sociétés
+  de projet, quelles affaires, combien d’étapes, et où en est chacune au dernier état identifié.</p>
+  <p class="lede">Trouver une décision est facile. Savoir laquelle est encore d’actualité, à quelle société
+  elle se rattache et ce qu’elle a laissé ouvert, non. <b>C’est ce travail-là qui est montré ici.</b></p>
+  <div class="bento"><div class="bt bt-2"><b>20</b><span>portefeuilles</span></div><div class="bt bt-2"><b>55</b><span>affaires</span></div><div class="bt bt-2"><b>74</b><span>décisions</span></div><div class="bt bt-2"><b>8</b><span>cours d’appel</span></div><div class="bt bt-date"><b>26.06.2026</b><span>arrêt du corpus</span></div>
+   <div class="bt bt-note"><p>Sociétés de projet et opérateurs masqués.
+   <em class="nw">Les numéros de décision sont réels</em>&#8239;: chaque date de cette page ouvre le fichier
+   source publié par le Conseil d’État.</p></div>
+  </div>
+  <p class="band-foot">Corpus&#8239;: éolien terrestre, cours administratives d’appel, du 1<sup>er</sup> janvier
+  2022 au 26 juin 2026. Dans cet échantillon, la décision la plus récente est du
+  <b class="nw">10 juin 2026</b>. Aucune donnée n’a été transmise par un tiers.</p>
+ </div></header>
+<main class="wrap">
+<section class="sec rv" id="methode" aria-labelledby="h-met">
+ <div class="sec-head"><h2 class="eyebrow" id="h-met">Trois choses que la donnée brute ne dit pas</h2>
+ <p>Section 1 sur 6</p></div>
+ <div class="constats"><article class="co"><span class="n">2 <i>rapprochements</i></span><h3>Le rattachement, pas la lecture</h3><p>Une décision ne dit pas à quelle affaire elle appartient, et une affaire ne dit pas à quel portefeuille elle se rattache. Il faut donc faire deux rapprochements avant de pouvoir lire quoi que ce soit&#8239;: ici, 74 décisions se regroupent en 55 affaires, qui se rattachent à 20 portefeuilles. C’est ce travail qui coûte, pas la lecture des arrêts&#8239;: dénominations qui changent, sociétés rachetées, numéros voisins qui ne relèvent pas du même dossier.</p></article><article class="co"><span class="n">19 <i>affaires sur 55</i></span><h3>Une affaire n’est pas une décision</h3><p>Dans ces 19 affaires, la cour a statué plusieurs fois. L’écart entre la première décision et la dernière est de <b class="nw">2 ans et 1 mois</b> en médiane, et atteint <b class="nw">3 ans et 10 mois</b>. Lire seulement la première donne donc un état qui peut avoir deux ans, et rien dans son fichier n’annonce qu’une seconde décision suivra.</p></article><article class="co"><span class="n">8 <i>affaires · 2 sociétés</i></span><h3>Ce qui reste ouvert</h3><p>8 affaires se terminent sur une décision qui ne clôt pas l’instance, réparties sur 7 portefeuilles. 2 sociétés ne portent aucune décision. Ces deux constats se lisent uniquement par rapport au périmètre et à la période décrits en bas de page, puisque le corpus rassemble l’intégralité des décisions publiées sur ce périmètre jusqu’au 26 juin 2026.</p></article></div>
+</section>
+<section class="sec rv" id="preuve" aria-labelledby="h-pre">
+ <div class="sec-head"><h2 class="eyebrow" id="h-pre">La même affaire, avant et après · SPV I1</h2>
+ <p>Section 2 sur 6</p></div>
+ <div class="duo">
+  <section>
+   <h3>Ce que renvoie un corpus lu décision par décision</h3>
+   <ul class="brute"><li><span class="dd">19 avril 2022</span><span class="nn">21BX03190</span><span>CAA Bordeaux</span></li><li><span class="dd">3 févr. 2026</span><span class="nn">21BX03190</span><span>CAA Bordeaux</span></li></ul>
+   <p class="brute-note">L’open data publie une décision par fichier. Ces deux fichiers portent le même
+   numéro de rôle, mais celui de 2022 ne contient aucune mention de celui de
+   2026. Un lecteur qui s’arrête au premier conclut que le dossier s’est achevé en
+   2022.</p>
+  </section>
+  <div class="arrow" role="presentation"><span>→</span></div>
+  <section>
+   <h3>Ce que Kolem restitue</h3>
+   <div class="rec-tete"><span class="num">21BX03190</span><span class="cour">CAA Bordeaux</span>
+    <span class="etapes">2 décisions</span>
+    <span class="issue i-annul">Autorisation annulée</span></div>
+   <div class="axe"><span class="rule"></span><span class="lien-t l-annul" style="left:6.6%;right:8.74%"></span><span class="pt p-annul" style="left:6.6%" data-i="0" role="presentation"></span><span class="pt p-annul pt-last" style="left:91.26%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21BX03190_20220419.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21BX03190_20220419.xml" title="Ouvrir DCA_21BX03190_20220419.xml sur l’open data du Conseil d’État">19 avril 2022</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21BX03190_20260203.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21BX03190_20260203.xml" title="Ouvrir DCA_21BX03190_20260203.xml sur l’open data du Conseil d’État">3 févr. 2026</a><span class="retenu">état retenu</span></li></ul>
+   <p class="rec-note">Une affaire, 2 étapes, <b class="nw">3 ans et 10 mois</b>
+   entre les deux. L’état affiché est celui de la décision du <span class="nw">3 févr. 2026</span>,
+   la plus récente identifiée au corpus pour cette affaire. Les deux fichiers sources s’ouvrent d’un clic :
+   rien ici ne demande d’être cru sur parole.</p>
+  </section>
+ </div></section>
+<section class="sec rv" id="ensemble" aria-labelledby="h-ens">
+ <div class="sec-head"><h2 class="eyebrow" id="h-ens">Vue d’ensemble · issue des 55 affaires</h2>
+ <p>Section 3 sur 6</p></div>
+ <div class="repart"><span class="barre" role="presentation"><span class="seg s-annul" style="flex:19" title="19 annulées"></span><span class="seg s-maintien" style="flex:20" title="20 maintenues"></span><span class="seg s-cours" style="flex:8" title="8 non closes"></span><span class="seg s-clos" style="flex:2" title="2 closes sans examen"></span><span class="seg s-indet" style="flex:6" title="6 non caractérisées"></span></span>
+ <ul class="leg"><li class="lg"><span class="pastille s-annul"></span>Autorisation annulée <b>19</b></li><li class="lg"><span class="pastille s-maintien"></span>Autorisation maintenue <b>20</b></li><li class="lg"><span class="pastille s-cours"></span>Instance non close <b>8</b></li><li class="lg"><span class="pastille s-clos"></span>Instance close sans examen au fond <b>2</b></li><li class="lg"><span class="pastille s-indet"></span>Issue non caractérisée <b>6</b></li></ul></div>
+ <div class="filtres" role="group" aria-label="Filtrer les portefeuilles par situation"><button class="fl" type="button" data-f="tous" aria-pressed="true">Tous<i>20</i></button><button class="fl" type="button" data-f="annulation" aria-pressed="false">Annulation prononcée<i>10</i></button><button class="fl" type="button" data-f="ouverte" aria-pressed="false">Instance non close<i>3</i></button><button class="fl" type="button" data-f="noncaract" aria-pressed="false">Issue non caractérisée<i>3</i></button><button class="fl" type="button" data-f="maintien" aria-pressed="false">Autorisations maintenues<i>2</i></button><button class="fl" type="button" data-f="aucune" aria-pressed="false">Aucune décision<i>2</i></button></div>
+ <p class="hint">10 portefeuilles sur 20 portent au moins une annulation ·
+ 7 portent au moins une affaire non close · cliquez une société pour ouvrir sa fiche</p>
+ <div class="tbl-wrap"><table class="idx">
+  <colgroup><col class="w1"><col class="w2"><col><col class="w3"><col class="w3"><col class="w4"><col></colgroup>
+  <thead><tr><th scope="col">Société</th><th scope="col" class="h-op">Opérateur</th>
+   <th scope="col">Situation au dernier état identifié</th>
+   <th scope="col" class="r">Affaires</th><th scope="col" class="r h-dec">Décisions</th>
+   <th scope="col" class="h-date">Dernière décision</th><th scope="col" class="h-mk">Marqueurs</th>
+  </tr></thead><tbody><tr data-sit="annulation"><td><a class="lien" href="#spv-g1">SPV G1</a></td><td class="c-op"><span class="op-c">Opérateur G</span></td><td><span class="sit sit-annulation">Annulation prononcée</span></td><td class="r"><span class="dnum">4</span></td><td class="r c-dec"><span class="dnum">6</span></td><td class="c-date"><span class="dnum"><span class="nw">9 juin 2026</span></span></td><td class="c-mk"><span class="mk">réinstruction</span><span class="mk">multi-étapes</span></td></tr><tr data-sit="annulation"><td><a class="lien" href="#spv-c1">SPV C1</a></td><td class="c-op"><span class="op-c">Opérateur C</span></td><td><span class="sit sit-annulation">Annulation prononcée</span></td><td class="r"><span class="dnum">3</span></td><td class="r c-dec"><span class="dnum">6</span></td><td class="c-date"><span class="dnum"><span class="nw">28 mars 2025</span></span></td><td class="c-mk"><span class="mk">multi-étapes</span></td></tr><tr data-sit="annulation"><td><a class="lien" href="#spv-l1">SPV L1</a></td><td class="c-op"><span class="op-c">Opérateur L</span></td><td><span class="sit sit-annulation">Annulation prononcée</span></td><td class="r"><span class="dnum">6</span></td><td class="r c-dec"><span class="dnum">7</span></td><td class="c-date"><span class="dnum"><span class="nw">10 juin 2026</span></span></td><td class="c-mk"><span class="mk">pourvoi CE</span><span class="mk">multi-étapes</span></td></tr><tr data-sit="annulation"><td><a class="lien" href="#spv-i1">SPV I1</a></td><td class="c-op"><span class="op-c">Opérateur I</span></td><td><span class="sit sit-annulation">Annulation prononcée</span></td><td class="r"><span class="dnum">7</span></td><td class="r c-dec"><span class="dnum">8</span></td><td class="c-date"><span class="dnum"><span class="nw">21 mai 2026</span></span></td><td class="c-mk"><span class="mk">injonction de délivrer</span><span class="mk">multi-étapes</span></td></tr><tr data-sit="annulation"><td><a class="lien" href="#spv-e1">SPV E1</a></td><td class="c-op"><span class="op-c">Opérateur E</span></td><td><span class="sit sit-annulation">Annulation prononcée</span></td><td class="r"><span class="dnum">2</span></td><td class="r c-dec"><span class="dnum">4</span></td><td class="c-date"><span class="dnum"><span class="nw">27 mars 2026</span></span></td><td class="c-mk"><span class="mk">pourvoi CE</span><span class="mk">réinstruction</span><span class="mk">multi-étapes</span></td></tr><tr data-sit="annulation"><td><a class="lien" href="#spv-d1">SPV D1</a></td><td class="c-op"><span class="op-c">Opérateur D</span></td><td><span class="sit sit-annulation">Annulation prononcée</span></td><td class="r"><span class="dnum">4</span></td><td class="r c-dec"><span class="dnum">6</span></td><td class="c-date"><span class="dnum"><span class="nw">22 janv. 2026</span></span></td><td class="c-mk"><span class="mk">multi-étapes</span></td></tr><tr data-sit="annulation"><td><a class="lien" href="#spv-b1">SPV B1</a></td><td class="c-op"><span class="op-c">Opérateur B</span></td><td><span class="sit sit-annulation">Annulation prononcée</span></td><td class="r"><span class="dnum">2</span></td><td class="r c-dec"><span class="dnum">2</span></td><td class="c-date"><span class="dnum"><span class="nw">21 juil. 2022</span></span></td><td class="c-mk"><span class="mk">pourvoi CE</span></td></tr><tr data-sit="annulation"><td><a class="lien" href="#spv-j1">SPV J1</a></td><td class="c-op"><span class="op-c">Opérateur J</span></td><td><span class="sit sit-annulation">Annulation prononcée</span></td><td class="r"><span class="dnum">2</span></td><td class="r c-dec"><span class="dnum">3</span></td><td class="c-date"><span class="dnum"><span class="nw">2 avril 2026</span></span></td><td class="c-mk"><span class="mk">pourvoi CE</span><span class="mk">réinstruction</span><span class="mk">multi-étapes</span></td></tr><tr data-sit="annulation"><td><a class="lien" href="#spv-o1">SPV O1</a></td><td class="c-op"><span class="op-c">Opérateur O</span></td><td><span class="sit sit-annulation">Annulation prononcée</span></td><td class="r"><span class="dnum">1</span></td><td class="r c-dec"><span class="dnum">2</span></td><td class="c-date"><span class="dnum"><span class="nw">4 juil. 2024</span></span></td><td class="c-mk"><span class="mk">pourvoi CE</span><span class="mk">multi-étapes</span></td></tr><tr data-sit="annulation"><td><a class="lien" href="#spv-a2">SPV A2</a></td><td class="c-op"><span class="op-c">Opérateur A</span></td><td><span class="sit sit-annulation">Annulation prononcée</span></td><td class="r"><span class="dnum">1</span></td><td class="r c-dec"><span class="dnum">1</span></td><td class="c-date"><span class="dnum"><span class="nw">14 mars 2023</span></span></td><td class="c-mk"><span class="tiret">aucun</span></td></tr><tr data-sit="ouverte"><td><a class="lien" href="#spv-f1">SPV F1</a></td><td class="c-op"><span class="op-c">Opérateur F</span></td><td><span class="sit sit-ouverte">Instance non close</span></td><td class="r"><span class="dnum">5</span></td><td class="r c-dec"><span class="dnum">6</span></td><td class="c-date"><span class="dnum"><span class="nw">24 mars 2026</span></span></td><td class="c-mk"><span class="mk">réinstruction</span><span class="mk">multi-étapes</span></td></tr><tr data-sit="ouverte"><td><a class="lien" href="#spv-k1">SPV K1</a></td><td class="c-op"><span class="op-c">Opérateur K</span></td><td><span class="sit sit-ouverte">Instance non close</span></td><td class="r"><span class="dnum">4</span></td><td class="r c-dec"><span class="dnum">5</span></td><td class="c-date"><span class="dnum"><span class="nw">5 déc. 2025</span></span></td><td class="c-mk"><span class="mk">multi-étapes</span></td></tr><tr data-sit="ouverte"><td><a class="lien" href="#spv-a1">SPV A1</a></td><td class="c-op"><span class="op-c">Opérateur A</span></td><td><span class="sit sit-ouverte">Instance non close</span></td><td class="r"><span class="dnum">6</span></td><td class="r c-dec"><span class="dnum">6</span></td><td class="c-date"><span class="dnum"><span class="nw">14 nov. 2025</span></span></td><td class="c-mk"><span class="mk">pourvoi CE</span><span class="mk">réinstruction</span></td></tr><tr data-sit="noncaract"><td><a class="lien" href="#spv-n1">SPV N1</a></td><td class="c-op"><span class="op-c">Opérateur N</span></td><td><span class="sit sit-noncaract">Issue non caractérisée</span></td><td class="r"><span class="dnum">2</span></td><td class="r c-dec"><span class="dnum">3</span></td><td class="c-date"><span class="dnum"><span class="nw">25 sept. 2025</span></span></td><td class="c-mk"><span class="mk">multi-étapes</span></td></tr><tr data-sit="noncaract"><td><a class="lien" href="#spv-h1">SPV H1</a></td><td class="c-op"><span class="op-c">Opérateur H</span></td><td><span class="sit sit-noncaract">Issue non caractérisée</span></td><td class="r"><span class="dnum">1</span></td><td class="r c-dec"><span class="dnum">2</span></td><td class="c-date"><span class="dnum"><span class="nw">17 avril 2024</span></span></td><td class="c-mk"><span class="mk">multi-étapes</span></td></tr><tr data-sit="noncaract"><td><a class="lien" href="#spv-m1">SPV M1</a></td><td class="c-op"><span class="op-c">Opérateur M</span></td><td><span class="sit sit-noncaract">Issue non caractérisée</span></td><td class="r"><span class="dnum">1</span></td><td class="r c-dec"><span class="dnum">2</span></td><td class="c-date"><span class="dnum"><span class="nw">9 nov. 2023</span></span></td><td class="c-mk"><span class="mk">multi-étapes</span></td></tr><tr data-sit="maintien"><td><a class="lien" href="#spv-p1">SPV P1</a></td><td class="c-op"><span class="op-c">Opérateur P</span></td><td><span class="sit sit-maintien">Autorisations maintenues</span></td><td class="r"><span class="dnum">2</span></td><td class="r c-dec"><span class="dnum">3</span></td><td class="c-date"><span class="dnum"><span class="nw">19 juin 2025</span></span></td><td class="c-mk"><span class="mk">multi-étapes</span></td></tr><tr data-sit="maintien"><td><a class="lien" href="#spv-b2">SPV B2</a></td><td class="c-op"><span class="op-c">Opérateur B</span></td><td><span class="sit sit-maintien">Autorisations maintenues</span></td><td class="r"><span class="dnum">2</span></td><td class="r c-dec"><span class="dnum">2</span></td><td class="c-date"><span class="dnum"><span class="nw">21 déc. 2023</span></span></td><td class="c-mk"><span class="tiret">aucun</span></td></tr><tr data-sit="aucune"><td><a class="lien" href="#spv-q1">SPV Q1</a></td><td class="c-op"><span class="op-c">Opérateur Q</span></td><td><span class="sit sit-aucune">Aucune décision</span></td><td class="r"><span class="dnum">·</span></td><td class="r c-dec"><span class="dnum">·</span></td><td class="c-date"><span class="dnum"><span class="tiret">·</span></span></td><td class="c-mk"><span class="tiret">aucun</span></td></tr><tr data-sit="aucune"><td><a class="lien" href="#spv-q2">SPV Q2</a></td><td class="c-op"><span class="op-c">Opérateur Q</span></td><td><span class="sit sit-aucune">Aucune décision</span></td><td class="r"><span class="dnum">·</span></td><td class="r c-dec"><span class="dnum">·</span></td><td class="c-date"><span class="dnum"><span class="tiret">·</span></span></td><td class="c-mk"><span class="tiret">aucun</span></td></tr></tbody></table></div></section>
+<section class="sec rv" id="registre" aria-labelledby="h-reg">
+ <div class="sec-head"><h2 class="eyebrow" id="h-reg">Les 20 portefeuilles, classés par situation
+ contentieuse au dernier état identifié</h2><p>Section 4 sur 6</p></div>
+ <p class="hint">Comment lire les frises. Toutes couvrent la même période, du 1<sup>er</sup> janvier 2022 au
+ 26 juin 2026, à la même échelle&#8239;: deux points au même endroit sur deux frises différentes correspondent
+ à la même date. Un cercle par décision, placé à sa date. Le cercle plein est la décision la plus récente de
+ l’affaire, celle dont l’issue est affichée. Le trait vertical pointillé, à droite, marque la fin du corpus.
+ Les affaires jugées une seule fois n’ont pas de frise, leur date suffit.</p>
+ <div class="bande" data-sit="annulation"><h3>Annulation prononcée</h3><span class="cpt">10 / 20</span><p>Au moins une affaire dont la dernière décision annule l’autorisation.</p></div><article class="pf" id="spv-g1" data-sit="annulation">
+ <div class="rail-pf"><h4>SPV G1</h4><p class="op">Opérateur G</p>
+  <p class="cnt">4 affaires · 6 décisions</p><span class="barre" role="presentation"><span class="seg s-annul" style="flex:3"></span><span class="seg s-cours" style="flex:1"></span></span><p class="releve"><span class="t-annul">3 annulées</span><span class="t-cours">1 non close</span></p><div class="mks"><span class="mk">réinstruction ordonnée</span><span class="mk">2 affaires en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-annulation"><span class="lab">Lecture Kolem</span><b>3 autorisations annulées</b> au dernier état identifié. 1 affaire reste sans décision de clôture, à vérifier à date. 2 affaires ont été jugées en plusieurs étapes, la plus longue étalée sur <span class="nw">2 ans et 5 mois</span>&#8239;: l’état affiché est celui de la décision la plus récente de chacune.</div><div class="aff"><div class="aff-tete"><span class="num">25NT02763</span><span class="cour">CAA Nantes</span><span class="issue i-annul">Autorisation annulée</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_25NT02763_20251208.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_25NT02763_20251208.xml" title="Ouvrir DCA_25NT02763_20251208.xml sur l’open data du Conseil d’État">8 déc. 2025</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">21NT03592</span><span class="cour">CAA Nantes</span><span class="etapes">2 décisions</span><span class="issue i-annul">Autorisation annulée</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-annul" style="left:32.86%;right:12.4%"></span><span class="pt p-annul" style="left:32.86%" data-i="0" role="presentation"></span><span class="pt p-annul pt-last" style="left:87.6%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21NT03592_20230623.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21NT03592_20230623.xml" title="Ouvrir DCA_21NT03592_20230623.xml sur l’open data du Conseil d’État">23 juin 2023</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21NT03592_20251205.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21NT03592_20251205.xml" title="Ouvrir DCA_21NT03592_20251205.xml sur l’open data du Conseil d’État">5 déc. 2025</a><span class="retenu">état retenu</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">21NT03611</span><span class="cour">CAA Nantes</span><span class="etapes">2 décisions</span><span class="issue i-annul">Autorisation annulée</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-annul" style="left:32.86%;right:12.4%"></span><span class="pt p-annul" style="left:32.86%" data-i="0" role="presentation"></span><span class="pt p-annul pt-last" style="left:87.6%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21NT03611_20230623.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21NT03611_20230623.xml" title="Ouvrir DCA_21NT03611_20230623.xml sur l’open data du Conseil d’État">23 juin 2023</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21NT03611_20251205.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21NT03611_20251205.xml" title="Ouvrir DCA_21NT03611_20251205.xml sur l’open data du Conseil d’État">5 déc. 2025</a><span class="retenu">état retenu</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">25NT02762</span><span class="cour">CAA Nantes</span><span class="issue i-cours">Instance non close</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_25NT02762_20260609.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_25NT02762_20260609.xml" title="Ouvrir DCA_25NT02762_20260609.xml sur l’open data du Conseil d’État">9 juin 2026</a><span class="fg">injonction&#8239;: réinstruire</span></li></ul></div></div></article><article class="pf" id="spv-c1" data-sit="annulation">
+ <div class="rail-pf"><h4>SPV C1</h4><p class="op">Opérateur C</p>
+  <p class="cnt">3 affaires · 6 décisions</p><span class="barre" role="presentation"><span class="seg s-annul" style="flex:3"></span></span><p class="releve"><span class="t-annul">3 annulées</span></p><div class="mks"><span class="mk">3 affaires en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-annulation"><span class="lab">Lecture Kolem</span><b>3 autorisations annulées</b> au dernier état identifié. 3 affaires ont été jugées en plusieurs étapes, la plus longue étalée sur <span class="nw">2 ans et 2 mois</span>&#8239;: l’état affiché est celui de la décision la plus récente de chacune.</div><div class="aff"><div class="aff-tete"><span class="num">20MA02299</span><span class="cour">CAA Marseille</span><span class="etapes">2 décisions</span><span class="issue i-annul">Autorisation annulée</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-annul" style="left:23.46%;right:27.79%"></span><span class="pt p-annul" style="left:23.46%" data-i="0" role="presentation"></span><span class="pt p-annul pt-last" style="left:72.21%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20MA02299_20230120.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20MA02299_20230120.xml" title="Ouvrir DCA_20MA02299_20230120.xml sur l’open data du Conseil d’État">20 janv. 2023</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20MA02299_20250328.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20MA02299_20250328.xml" title="Ouvrir DCA_20MA02299_20250328.xml sur l’open data du Conseil d’État">28 mars 2025</a><span class="retenu">état retenu</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">20MA03941</span><span class="cour">CAA Marseille</span><span class="etapes">2 décisions</span><span class="issue i-annul">Autorisation annulée</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-annul" style="left:23.46%;right:27.79%"></span><span class="pt p-annul" style="left:23.46%" data-i="0" role="presentation"></span><span class="pt p-annul pt-last" style="left:72.21%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20MA03941_20230120.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20MA03941_20230120.xml" title="Ouvrir DCA_20MA03941_20230120.xml sur l’open data du Conseil d’État">20 janv. 2023</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20MA03941_20250328.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20MA03941_20250328.xml" title="Ouvrir DCA_20MA03941_20250328.xml sur l’open data du Conseil d’État">28 mars 2025</a><span class="retenu">état retenu</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">20MA04322</span><span class="cour">CAA Marseille</span><span class="etapes">2 décisions</span><span class="issue i-annul">Autorisation annulée</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-annul" style="left:23.46%;right:27.79%"></span><span class="pt p-annul" style="left:23.46%" data-i="0" role="presentation"></span><span class="pt p-annul pt-last" style="left:72.21%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20MA04322_20230120.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20MA04322_20230120.xml" title="Ouvrir DCA_20MA04322_20230120.xml sur l’open data du Conseil d’État">20 janv. 2023</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20MA04322_20250328.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20MA04322_20250328.xml" title="Ouvrir DCA_20MA04322_20250328.xml sur l’open data du Conseil d’État">28 mars 2025</a><span class="retenu">état retenu</span></li></ul></div></div></article><article class="pf" id="spv-l1" data-sit="annulation">
+ <div class="rail-pf"><h4>SPV L1</h4><p class="op">Opérateur L</p>
+  <p class="cnt">6 affaires · 7 décisions</p><span class="barre" role="presentation"><span class="seg s-annul" style="flex:2"></span><span class="seg s-maintien" style="flex:3"></span><span class="seg s-cours" style="flex:1"></span></span><p class="releve"><span class="t-annul">2 annulées</span><span class="t-maintien">3 maintenues</span><span class="t-cours">1 non close</span></p><div class="mks"><span class="mk">pourvoi CE</span><span class="mk">1 affaire en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-annulation"><span class="lab">Lecture Kolem</span><b>2 autorisations annulées</b> au dernier état identifié. 1 affaire reste sans décision de clôture, à vérifier à date. Pour le reste&#8239;: 3 autorisations maintenues. Une affaire a été jugée en plusieurs étapes, étalées sur <span class="nw">11 mois</span>&#8239;: l’état affiché est celui de sa décision la plus récente.</div><div class="aff"><div class="aff-tete"><span class="num">21BX02554</span><span class="cour">CAA Bordeaux</span><span class="issue i-annul">Autorisation annulée<span class="suite">suite au CE identifiée</span></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21BX02554_20240418.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21BX02554_20240418.xml" title="Ouvrir DCA_21BX02554_20240418.xml sur l’open data du Conseil d’État">18 avril 2024</a><span class="fg">pourvoi CE</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">21VE02395</span><span class="cour">CAA Versailles</span><span class="issue i-annul">Autorisation annulée<span class="suite">suite au CE identifiée</span></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21VE02395_20230406.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21VE02395_20230406.xml" title="Ouvrir DCA_21VE02395_20230406.xml sur l’open data du Conseil d’État">6 avril 2023</a><span class="fg">pourvoi CE</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">25LY00061</span><span class="cour">CAA Lyon</span><span class="issue i-cours">Instance non close</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_25LY00061_20260610.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_25LY00061_20260610.xml" title="Ouvrir DCA_25LY00061_20260610.xml sur l’open data du Conseil d’État">10 juin 2026</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">21LY01420</span><span class="cour">CAA Lyon</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21LY01420_20231123.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21LY01420_20231123.xml" title="Ouvrir DCA_21LY01420_20231123.xml sur l’open data du Conseil d’État">23 nov. 2023</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">21LY03312</span><span class="cour">CAA Lyon</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21LY03312_20231123.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21LY03312_20231123.xml" title="Ouvrir DCA_21LY03312_20231123.xml sur l’open data du Conseil d’État">23 nov. 2023</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">21NT00359</span><span class="cour">CAA Nantes</span><span class="etapes">2 décisions</span><span class="issue i-maintien">Autorisation maintenue<span class="suite">suite au CE identifiée</span></span></div><div class="axe"><span class="rule"></span><span class="lien-t l-maintien" style="left:7.88%;right:72.02%"></span><span class="pt p-maintien" style="left:7.88%" data-i="0" role="presentation"></span><span class="pt p-maintien pt-last" style="left:27.98%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21NT00359_20220510.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21NT00359_20220510.xml" title="Ouvrir DCA_21NT00359_20220510.xml sur l’open data du Conseil d’État">10 mai 2022</a><span class="fg">pourvoi CE</span></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21NT00359_20230404.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21NT00359_20230404.xml" title="Ouvrir DCA_21NT00359_20230404.xml sur l’open data du Conseil d’État">4 avril 2023</a><span class="fg">pourvoi CE</span><span class="retenu">état retenu</span></li></ul></div></div></article><article class="pf" id="spv-i1" data-sit="annulation">
+ <div class="rail-pf"><h4>SPV I1</h4><p class="op">Opérateur I</p>
+  <p class="cnt">7 affaires · 8 décisions</p><span class="barre" role="presentation"><span class="seg s-annul" style="flex:2"></span><span class="seg s-maintien" style="flex:2"></span><span class="seg s-cours" style="flex:1"></span><span class="seg s-indet" style="flex:2"></span></span><p class="releve"><span class="t-annul">2 annulées</span><span class="t-maintien">2 maintenues</span><span class="t-cours">1 non close</span><span class="t-indet">2 non caractérisées</span></p><div class="mks"><span class="mk">injonction de délivrer</span><span class="mk">1 affaire en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-annulation"><span class="lab">Lecture Kolem</span><b>2 autorisations annulées</b> au dernier état identifié. 1 affaire reste sans décision de clôture, à vérifier à date. Pour le reste&#8239;: 2 autorisations maintenues et 2 issues non caractérisées. Une affaire a été jugée en plusieurs étapes, étalées sur <span class="nw">3 ans et 10 mois</span>&#8239;: l’état affiché est celui de sa décision la plus récente.</div><div class="aff"><div class="aff-tete"><span class="num">21BX03190</span><span class="cour">CAA Bordeaux</span><span class="etapes">2 décisions</span><span class="issue i-annul">Autorisation annulée</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-annul" style="left:6.6%;right:8.74%"></span><span class="pt p-annul" style="left:6.6%" data-i="0" role="presentation"></span><span class="pt p-annul pt-last" style="left:91.26%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21BX03190_20220419.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21BX03190_20220419.xml" title="Ouvrir DCA_21BX03190_20220419.xml sur l’open data du Conseil d’État">19 avril 2022</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21BX03190_20260203.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21BX03190_20260203.xml" title="Ouvrir DCA_21BX03190_20260203.xml sur l’open data du Conseil d’État">3 févr. 2026</a><span class="retenu">état retenu</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">21BX04711</span><span class="cour">CAA Bordeaux</span><span class="issue i-annul">Autorisation annulée</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21BX04711_20230425.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21BX04711_20230425.xml" title="Ouvrir DCA_21BX04711_20230425.xml sur l’open data du Conseil d’État">25 avril 2023</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">22BX02948</span><span class="cour">CAA Bordeaux</span><span class="issue i-cours">Instance non close</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_22BX02948_20221220.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_22BX02948_20221220.xml" title="Ouvrir DCA_22BX02948_20221220.xml sur l’open data du Conseil d’État">20 déc. 2022</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">26VE01504</span><span class="cour">CAA Versailles</span><span class="issue i-indet">Issue non caractérisée</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/ORCA_26VE01504_20260521.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="ORCA_26VE01504_20260521.xml" title="Ouvrir ORCA_26VE01504_20260521.xml sur l’open data du Conseil d’État">21 mai 2026</a><span class="fg">ordonnance</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">26VE01505</span><span class="cour">CAA Versailles</span><span class="issue i-indet">Issue non caractérisée</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/ORCA_26VE01505_20260521.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="ORCA_26VE01505_20260521.xml" title="Ouvrir ORCA_26VE01505_20260521.xml sur l’open data du Conseil d’État">21 mai 2026</a><span class="fg">ordonnance</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">22BX02177</span><span class="cour">CAA Bordeaux</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_22BX02177_20240111.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_22BX02177_20240111.xml" title="Ouvrir DCA_22BX02177_20240111.xml sur l’open data du Conseil d’État">11 janv. 2024</a><span class="fg">injonction&#8239;: délivrer</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">22BX02947</span><span class="cour">CAA Bordeaux</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_22BX02947_20231108.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_22BX02947_20231108.xml" title="Ouvrir DCA_22BX02947_20231108.xml sur l’open data du Conseil d’État">8 nov. 2023</a><span class="fg">injonction&#8239;: délivrer</span></li></ul></div></div></article><article class="pf" id="spv-e1" data-sit="annulation">
+ <div class="rail-pf"><h4>SPV E1</h4><p class="op">Opérateur E</p>
+  <p class="cnt">2 affaires · 4 décisions</p><span class="barre" role="presentation"><span class="seg s-annul" style="flex:2"></span></span><p class="releve"><span class="t-annul">2 annulées</span></p><div class="mks"><span class="mk">pourvoi CE</span><span class="mk">réinstruction ordonnée</span><span class="mk">2 affaires en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-annulation"><span class="lab">Lecture Kolem</span><b>2 autorisations annulées</b> au dernier état identifié. 2 affaires ont été jugées en plusieurs étapes, la plus longue étalée sur <span class="nw">3 ans et 2 mois</span>&#8239;: l’état affiché est celui de la décision la plus récente de chacune.</div><div class="aff"><div class="aff-tete"><span class="num">20MA04635</span><span class="cour">CAA Marseille</span><span class="etapes">2 décisions</span><span class="issue i-annul">Autorisation annulée<span class="suite">suite au CE identifiée</span></span></div><div class="axe"><span class="rule"></span><span class="lien-t l-annul" style="left:23.46%;right:5.56%"></span><span class="pt p-annul" style="left:23.46%" data-i="0" role="presentation"></span><span class="pt p-annul pt-last" style="left:94.44%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20MA04635_20230120.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20MA04635_20230120.xml" title="Ouvrir DCA_20MA04635_20230120.xml sur l’open data du Conseil d’État">20 janv. 2023</a><span class="fg">injonction&#8239;: réinstruire</span><span class="fg">pourvoi CE</span></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20MA04635_20260327.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20MA04635_20260327.xml" title="Ouvrir DCA_20MA04635_20260327.xml sur l’open data du Conseil d’État">27 mars 2026</a><span class="fg">pourvoi CE</span><span class="retenu">état retenu</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">23MA00159</span><span class="cour">CAA Marseille</span><span class="etapes">2 décisions</span><span class="issue i-annul">Autorisation annulée</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-annul" style="left:50.82%;right:5.56%"></span><span class="pt p-annul" style="left:50.82%" data-i="0" role="presentation"></span><span class="pt p-annul pt-last" style="left:94.44%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_23MA00159_20240412.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_23MA00159_20240412.xml" title="Ouvrir DCA_23MA00159_20240412.xml sur l’open data du Conseil d’État">12 avril 2024</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_23MA00159_20260327.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_23MA00159_20260327.xml" title="Ouvrir DCA_23MA00159_20260327.xml sur l’open data du Conseil d’État">27 mars 2026</a><span class="retenu">état retenu</span></li></ul></div></div></article><article class="pf" id="spv-d1" data-sit="annulation">
+ <div class="rail-pf"><h4>SPV D1</h4><p class="op">Opérateur D</p>
+  <p class="cnt">4 affaires · 6 décisions</p><span class="barre" role="presentation"><span class="seg s-annul" style="flex:2"></span><span class="seg s-maintien" style="flex:2"></span></span><p class="releve"><span class="t-annul">2 annulées</span><span class="t-maintien">2 maintenues</span></p><div class="mks"><span class="mk">2 affaires en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-annulation"><span class="lab">Lecture Kolem</span><b>2 autorisations annulées</b> au dernier état identifié. Pour le reste&#8239;: 2 autorisations maintenues. 2 affaires ont été jugées en plusieurs étapes, la plus longue étalée sur <span class="nw">2 ans et 2 mois</span>&#8239;: l’état affiché est celui de la décision la plus récente de chacune.</div><div class="aff"><div class="aff-tete"><span class="num">22DA00719</span><span class="cour">CAA Douai</span><span class="etapes">2 décisions</span><span class="issue i-annul">Autorisation annulée</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-annul" style="left:43.92%;right:9.47%"></span><span class="pt p-annul" style="left:43.92%" data-i="0" role="presentation"></span><span class="pt p-annul pt-last" style="left:90.53%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_22DA00719_20231221.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_22DA00719_20231221.xml" title="Ouvrir DCA_22DA00719_20231221.xml sur l’open data du Conseil d’État">21 déc. 2023</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_22DA00719_20260122.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_22DA00719_20260122.xml" title="Ouvrir DCA_22DA00719_20260122.xml sur l’open data du Conseil d’État">22 janv. 2026</a><span class="retenu">état retenu</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">22DA00720</span><span class="cour">CAA Douai</span><span class="etapes">2 décisions</span><span class="issue i-annul">Autorisation annulée</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-annul" style="left:43.07%;right:9.47%"></span><span class="pt p-annul" style="left:43.07%" data-i="0" role="presentation"></span><span class="pt p-annul pt-last" style="left:90.53%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_22DA00720_20231207.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_22DA00720_20231207.xml" title="Ouvrir DCA_22DA00720_20231207.xml sur l’open data du Conseil d’État">7 déc. 2023</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_22DA00720_20260122.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_22DA00720_20260122.xml" title="Ouvrir DCA_22DA00720_20260122.xml sur l’open data du Conseil d’État">22 janv. 2026</a><span class="retenu">état retenu</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">21DA02105</span><span class="cour">CAA Douai</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21DA02105_20231221.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21DA02105_20231221.xml" title="Ouvrir DCA_21DA02105_20231221.xml sur l’open data du Conseil d’État">21 déc. 2023</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">22DA00718</span><span class="cour">CAA Douai</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_22DA00718_20231207.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_22DA00718_20231207.xml" title="Ouvrir DCA_22DA00718_20231207.xml sur l’open data du Conseil d’État">7 déc. 2023</a></li></ul></div></div></article><article class="pf" id="spv-b1" data-sit="annulation">
+ <div class="rail-pf"><h4>SPV B1</h4><p class="op">Opérateur B</p>
+  <p class="cnt">2 affaires · 2 décisions</p><span class="barre" role="presentation"><span class="seg s-annul" style="flex:2"></span></span><p class="releve"><span class="t-annul">2 annulées</span></p><div class="mks"><span class="mk">pourvoi CE</span></div></div>
+ <div class="corps"><div class="lecture lecture-annulation"><span class="lab">Lecture Kolem</span><b>2 autorisations annulées</b> au dernier état identifié.</div><div class="aff"><div class="aff-tete"><span class="num">18TL05380</span><span class="cour">CAA Toulouse</span><span class="issue i-annul">Autorisation annulée<span class="suite">suite au CE identifiée</span></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_18TL05380_20220721.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_18TL05380_20220721.xml" title="Ouvrir DCA_18TL05380_20220721.xml sur l’open data du Conseil d’État">21 juil. 2022</a><span class="fg">pourvoi CE</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">20TL03241</span><span class="cour">CAA Toulouse</span><span class="issue i-annul">Autorisation annulée<span class="suite">suite au CE identifiée</span></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20TL03241_20220721.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20TL03241_20220721.xml" title="Ouvrir DCA_20TL03241_20220721.xml sur l’open data du Conseil d’État">21 juil. 2022</a><span class="fg">pourvoi CE</span></li></ul></div></div></article><article class="pf" id="spv-j1" data-sit="annulation">
+ <div class="rail-pf"><h4>SPV J1</h4><p class="op">Opérateur J</p>
+  <p class="cnt">2 affaires · 3 décisions</p><span class="barre" role="presentation"><span class="seg s-annul" style="flex:1"></span><span class="seg s-cours" style="flex:1"></span></span><p class="releve"><span class="t-annul">1 annulée</span><span class="t-cours">1 non close</span></p><div class="mks"><span class="mk">pourvoi CE</span><span class="mk">réinstruction ordonnée</span><span class="mk">1 affaire en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-annulation"><span class="lab">Lecture Kolem</span><b>1 autorisation annulée</b> au dernier état identifié. 1 affaire reste sans décision de clôture, à vérifier à date. Une affaire a été jugée en plusieurs étapes, étalées sur <span class="nw">2 ans et 11 mois</span>&#8239;: l’état affiché est celui de sa décision la plus récente.</div><div class="aff"><div class="aff-tete"><span class="num">23BX02061</span><span class="cour">CAA Bordeaux</span><span class="issue i-annul">Autorisation annulée</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_23BX02061_20260402.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_23BX02061_20260402.xml" title="Ouvrir DCA_23BX02061_20260402.xml sur l’open data du Conseil d’État">2 avril 2026</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">19BX01049</span><span class="cour">CAA Bordeaux</span><span class="etapes">2 décisions</span><span class="issue i-cours">Instance non close</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-cours" style="left:9.16%;right:25.78%"></span><span class="pt p-cours" style="left:9.16%" data-i="0" role="presentation"></span><span class="pt p-cours pt-last" style="left:74.22%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_19BX01049_20220531.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_19BX01049_20220531.xml" title="Ouvrir DCA_19BX01049_20220531.xml sur l’open data du Conseil d’État">31 mai 2022</a><span class="fg">pourvoi CE</span></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_19BX01049_20250430.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_19BX01049_20250430.xml" title="Ouvrir DCA_19BX01049_20250430.xml sur l’open data du Conseil d’État">30 avril 2025</a><span class="fg">injonction&#8239;: réinstruire</span><span class="fg">pourvoi CE</span><span class="retenu">état retenu</span></li></ul></div></div></article><article class="pf" id="spv-o1" data-sit="annulation">
+ <div class="rail-pf"><h4>SPV O1</h4><p class="op">Opérateur O</p>
+  <p class="cnt">1 affaire · 2 décisions</p><span class="barre" role="presentation"><span class="seg s-annul" style="flex:1"></span></span><p class="releve"><span class="t-annul">1 annulée</span></p><div class="mks"><span class="mk">pourvoi CE</span><span class="mk">1 affaire en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-annulation"><span class="lab">Lecture Kolem</span><b>1 autorisation annulée</b> au dernier état identifié. Une affaire a été jugée en plusieurs étapes, étalées sur <span class="nw">1 an et 2 mois</span>&#8239;: l’état affiché est celui de sa décision la plus récente.</div><div class="aff"><div class="aff-tete"><span class="num">21VE00514</span><span class="cour">CAA Versailles</span><span class="etapes">2 décisions</span><span class="issue i-annul">Autorisation annulée<span class="suite">suite au CE identifiée</span></span></div><div class="axe"><span class="rule"></span><span class="lien-t l-annul" style="left:29.32%;right:44.11%"></span><span class="pt p-annul" style="left:29.32%" data-i="0" role="presentation"></span><span class="pt p-annul pt-last" style="left:55.89%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21VE00514_20230426.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21VE00514_20230426.xml" title="Ouvrir DCA_21VE00514_20230426.xml sur l’open data du Conseil d’État">26 avril 2023</a><span class="fg">pourvoi CE</span></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21VE00514_20240704.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21VE00514_20240704.xml" title="Ouvrir DCA_21VE00514_20240704.xml sur l’open data du Conseil d’État">4 juil. 2024</a><span class="fg">pourvoi CE</span><span class="retenu">état retenu</span></li></ul></div></div></article><article class="pf" id="spv-a2" data-sit="annulation">
+ <div class="rail-pf"><h4>SPV A2</h4><p class="op">Opérateur A</p>
+  <p class="cnt">1 affaire · 1 décision</p><span class="barre" role="presentation"><span class="seg s-annul" style="flex:1"></span></span><p class="releve"><span class="t-annul">1 annulée</span></p></div>
+ <div class="corps"><div class="lecture lecture-annulation"><span class="lab">Lecture Kolem</span><b>1 autorisation annulée</b> au dernier état identifié.</div><div class="aff"><div class="aff-tete"><span class="num">20NC00316</span><span class="cour">CAA Nancy</span><span class="issue i-annul">Autorisation annulée</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20NC00316_20230314.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20NC00316_20230314.xml" title="Ouvrir DCA_20NC00316_20230314.xml sur l’open data du Conseil d’État">14 mars 2023</a></li></ul></div></div></article><div class="bande" data-sit="ouverte"><h3>Instance non close</h3><span class="cpt">3 / 20</span><p>Aucune annulation, et au moins une affaire dont la dernière décision ne clôt pas l’instance.</p></div><article class="pf" id="spv-f1" data-sit="ouverte">
+ <div class="rail-pf"><h4>SPV F1</h4><p class="op">Opérateur F</p>
+  <p class="cnt">5 affaires · 6 décisions</p><span class="barre" role="presentation"><span class="seg s-maintien" style="flex:3"></span><span class="seg s-cours" style="flex:2"></span></span><p class="releve"><span class="t-maintien">3 maintenues</span><span class="t-cours">2 non closes</span></p><div class="mks"><span class="mk">réinstruction ordonnée</span><span class="mk">1 affaire en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-ouverte"><span class="lab">Lecture Kolem</span>Aucune annulation, mais <b>2 affaires</b> se terminent sur une décision qui ne clôt pas l’instance, sans rien de postérieur au corpus. Pour le reste&#8239;: 3 autorisations maintenues. Une affaire a été jugée en plusieurs étapes, étalées sur <span class="nw">1 an et 9 mois</span>&#8239;: l’état affiché est celui de sa décision la plus récente.</div><div class="aff"><div class="aff-tete"><span class="num">23NT02154</span><span class="cour">CAA Nantes</span><span class="issue i-cours">Instance non close</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_23NT02154_20230908.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_23NT02154_20230908.xml" title="Ouvrir DCA_23NT02154_20230908.xml sur l’open data du Conseil d’État">8 sept. 2023</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">23NT01205</span><span class="cour">CAA Nantes</span><span class="issue i-cours">Instance non close</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_23NT01205_20230613.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_23NT01205_20230613.xml" title="Ouvrir DCA_23NT01205_20230613.xml sur l’open data du Conseil d’État">13 juin 2023</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">22NT01665</span><span class="cour">CAA Nantes</span><span class="etapes">2 décisions</span><span class="issue i-maintien">Autorisation maintenue</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-maintien" style="left:55.35%;right:5.74%"></span><span class="pt p-maintien" style="left:55.35%" data-i="0" role="presentation"></span><span class="pt p-maintien pt-last" style="left:94.26%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_22NT01665_20240625.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_22NT01665_20240625.xml" title="Ouvrir DCA_22NT01665_20240625.xml sur l’open data du Conseil d’État">25 juin 2024</a><span class="fg">injonction&#8239;: réinstruire</span></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_22NT01665_20260324.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_22NT01665_20260324.xml" title="Ouvrir DCA_22NT01665_20260324.xml sur l’open data du Conseil d’État">24 mars 2026</a><span class="retenu">état retenu</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">24NT01261</span><span class="cour">CAA Nantes</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_24NT01261_20260324.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_24NT01261_20260324.xml" title="Ouvrir DCA_24NT01261_20260324.xml sur l’open data du Conseil d’État">24 mars 2026</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">20NT02451</span><span class="cour">CAA Nantes</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20NT02451_20220415.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20NT02451_20220415.xml" title="Ouvrir DCA_20NT02451_20220415.xml sur l’open data du Conseil d’État">15 avril 2022</a></li></ul></div></div></article><article class="pf" id="spv-k1" data-sit="ouverte">
+ <div class="rail-pf"><h4>SPV K1</h4><p class="op">Opérateur K</p>
+  <p class="cnt">4 affaires · 5 décisions</p><span class="barre" role="presentation"><span class="seg s-maintien" style="flex:1"></span><span class="seg s-cours" style="flex:1"></span><span class="seg s-indet" style="flex:2"></span></span><p class="releve"><span class="t-maintien">1 maintenue</span><span class="t-cours">1 non close</span><span class="t-indet">2 non caractérisées</span></p><div class="mks"><span class="mk">1 affaire en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-ouverte"><span class="lab">Lecture Kolem</span>Aucune annulation, mais <b>1 affaire</b> se termine sur une décision qui ne clôt pas l’instance, sans rien de postérieur au corpus. Pour le reste&#8239;: 1 autorisation maintenue et 2 issues non caractérisées. Une affaire a été jugée en plusieurs étapes, étalées sur <span class="nw">1 an et 9 mois</span>&#8239;: l’état affiché est celui de sa décision la plus récente.</div><div class="aff"><div class="aff-tete"><span class="num">23NT00601</span><span class="cour">CAA Nantes</span><span class="issue i-cours">Instance non close</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_23NT00601_20251205.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_23NT00601_20251205.xml" title="Ouvrir DCA_23NT00601_20251205.xml sur l’open data du Conseil d’État">5 déc. 2025</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">20NT02175</span><span class="cour">CAA Nantes</span><span class="etapes">2 décisions</span><span class="issue i-indet">Issue non caractérisée</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-indet" style="left:40.13%;right:21.38%"></span><span class="pt p-indet" style="left:40.13%" data-i="0" role="presentation"></span><span class="pt p-indet pt-last" style="left:78.62%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20NT02175_20231020.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20NT02175_20231020.xml" title="Ouvrir DCA_20NT02175_20231020.xml sur l’open data du Conseil d’État">20 oct. 2023</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20NT02175_20250711.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20NT02175_20250711.xml" title="Ouvrir DCA_20NT02175_20250711.xml sur l’open data du Conseil d’État">11 juil. 2025</a><span class="retenu">état retenu</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">21NT00304</span><span class="cour">CAA Nantes</span><span class="issue i-indet">Issue non caractérisée</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21NT00304_20250711.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21NT00304_20250711.xml" title="Ouvrir DCA_21NT00304_20250711.xml sur l’open data du Conseil d’État">11 juil. 2025</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">23NT00646</span><span class="cour">CAA Nantes</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_23NT00646_20251205.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_23NT00646_20251205.xml" title="Ouvrir DCA_23NT00646_20251205.xml sur l’open data du Conseil d’État">5 déc. 2025</a></li></ul></div></div></article><article class="pf" id="spv-a1" data-sit="ouverte">
+ <div class="rail-pf"><h4>SPV A1</h4><p class="op">Opérateur A</p>
+  <p class="cnt">6 affaires · 6 décisions</p><span class="barre" role="presentation"><span class="seg s-maintien" style="flex:4"></span><span class="seg s-cours" style="flex:1"></span><span class="seg s-indet" style="flex:1"></span></span><p class="releve"><span class="t-maintien">4 maintenues</span><span class="t-cours">1 non close</span><span class="t-indet">1 non caractérisée</span></p><div class="mks"><span class="mk">pourvoi CE</span><span class="mk">réinstruction ordonnée</span></div></div>
+ <div class="corps"><div class="lecture lecture-ouverte"><span class="lab">Lecture Kolem</span>Aucune annulation, mais <b>1 affaire</b> se termine sur une décision qui ne clôt pas l’instance, sans rien de postérieur au corpus. Pour le reste&#8239;: 4 autorisations maintenues et 1 issue non caractérisée.</div><div class="aff"><div class="aff-tete"><span class="num">18LY03261</span><span class="cour">CAA Lyon</span><span class="issue i-cours">Instance non close<span class="suite">suite au CE identifiée</span></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_18LY03261_20230315.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_18LY03261_20230315.xml" title="Ouvrir DCA_18LY03261_20230315.xml sur l’open data du Conseil d’État">15 mars 2023</a><span class="fg">injonction&#8239;: réinstruire</span><span class="fg">pourvoi CE</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">18LY03266</span><span class="cour">CAA Lyon</span><span class="issue i-indet">Issue non caractérisée</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_18LY03266_20230315.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_18LY03266_20230315.xml" title="Ouvrir DCA_18LY03266_20230315.xml sur l’open data du Conseil d’État">15 mars 2023</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">24LY03567</span><span class="cour">CAA Lyon</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_24LY03567_20251114.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_24LY03567_20251114.xml" title="Ouvrir DCA_24LY03567_20251114.xml sur l’open data du Conseil d’État">14 nov. 2025</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">23LY02659</span><span class="cour">CAA Lyon</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_23LY02659_20250403.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_23LY02659_20250403.xml" title="Ouvrir DCA_23LY02659_20250403.xml sur l’open data du Conseil d’État">3 avril 2025</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">24LY02057</span><span class="cour">CAA Lyon</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_24LY02057_20241219.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_24LY02057_20241219.xml" title="Ouvrir DCA_24LY02057_20241219.xml sur l’open data du Conseil d’État">19 déc. 2024</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">22LY01069</span><span class="cour">CAA Lyon</span><span class="issue i-maintien">Autorisation maintenue<span class="suite">suite au CE identifiée</span></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_22LY01069_20230309.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_22LY01069_20230309.xml" title="Ouvrir DCA_22LY01069_20230309.xml sur l’open data du Conseil d’État">9 mars 2023</a><span class="fg">pourvoi CE</span></li></ul></div></div></article><div class="bande" data-sit="noncaract"><h3>Issue non caractérisée</h3><span class="cpt">3 / 20</span><p>Ni annulation ni instance non close. Au moins une affaire dont l’effet sur l’autorisation n’a pas été qualifié.</p></div><article class="pf" id="spv-n1" data-sit="noncaract">
+ <div class="rail-pf"><h4>SPV N1</h4><p class="op">Opérateur N</p>
+  <p class="cnt">2 affaires · 3 décisions</p><span class="barre" role="presentation"><span class="seg s-maintien" style="flex:1"></span><span class="seg s-indet" style="flex:1"></span></span><p class="releve"><span class="t-maintien">1 maintenue</span><span class="t-indet">1 non caractérisée</span></p><div class="mks"><span class="mk">1 affaire en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-noncaract"><span class="lab">Lecture Kolem</span><b>Aucune annulation, aucune instance ouverte.</b> Le portefeuille se résume à 1 autorisation maintenue et 1 issue non caractérisée. Une issue non caractérisée n’est pas devinée&#8239;: la décision et son fichier source sont fournis, la case reste ouverte. Une affaire a été jugée en plusieurs étapes, étalées sur <span class="nw">1 an et 7 mois</span>&#8239;: l’état affiché est celui de sa décision la plus récente.</div><div class="aff"><div class="aff-tete"><span class="num">22DA00700</span><span class="cour">CAA Douai</span><span class="etapes">2 décisions</span><span class="issue i-indet">Issue non caractérisée</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-indet" style="left:48.2%;right:16.74%"></span><span class="pt p-indet" style="left:48.2%" data-i="0" role="presentation"></span><span class="pt p-indet pt-last" style="left:83.26%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_22DA00700_20240229.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_22DA00700_20240229.xml" title="Ouvrir DCA_22DA00700_20240229.xml sur l’open data du Conseil d’État">29 févr. 2024</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_22DA00700_20250925.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_22DA00700_20250925.xml" title="Ouvrir DCA_22DA00700_20250925.xml sur l’open data du Conseil d’État">25 sept. 2025</a><span class="retenu">état retenu</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">20DA01244</span><span class="cour">CAA Douai</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20DA01244_20220822.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20DA01244_20220822.xml" title="Ouvrir DCA_20DA01244_20220822.xml sur l’open data du Conseil d’État">22 août 2022</a></li></ul></div></div></article><article class="pf" id="spv-h1" data-sit="noncaract">
+ <div class="rail-pf"><h4>SPV H1</h4><p class="op">Opérateur H</p>
+  <p class="cnt">1 affaire · 2 décisions</p><span class="barre" role="presentation"><span class="seg s-clos" style="flex:1"></span></span><p class="releve"><span class="t-clos">1 close sans examen</span></p><div class="mks"><span class="mk">1 affaire en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-noncaract"><span class="lab">Lecture Kolem</span><b>Aucune annulation, aucune instance ouverte.</b> Le portefeuille se résume à 1 instance close sans examen au fond. Une affaire a été jugée en plusieurs étapes, étalées sur <span class="nw">1 an</span>&#8239;: l’état affiché est celui de sa décision la plus récente.</div><div class="aff"><div class="aff-tete"><span class="num">20NC02488</span><span class="cour">CAA Nancy</span><span class="etapes">2 décisions</span><span class="issue i-clos">Instance close sans examen au fond</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-clos" style="left:28.41%;right:48.87%"></span><span class="pt p-clos" style="left:28.41%" data-i="0" role="presentation"></span><span class="pt p-clos pt-last" style="left:51.13%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_20NC02488_20230411.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_20NC02488_20230411.xml" title="Ouvrir DCA_20NC02488_20230411.xml sur l’open data du Conseil d’État">11 avril 2023</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/ORCA_20NC02488_20240417.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="ORCA_20NC02488_20240417.xml" title="Ouvrir ORCA_20NC02488_20240417.xml sur l’open data du Conseil d’État">17 avril 2024</a><span class="fg">ordonnance</span><span class="retenu">état retenu</span></li></ul></div></div></article><article class="pf" id="spv-m1" data-sit="noncaract">
+ <div class="rail-pf"><h4>SPV M1</h4><p class="op">Opérateur M</p>
+  <p class="cnt">1 affaire · 2 décisions</p><span class="barre" role="presentation"><span class="seg s-clos" style="flex:1"></span></span><p class="releve"><span class="t-clos">1 close sans examen</span></p><div class="mks"><span class="mk">1 affaire en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-noncaract"><span class="lab">Lecture Kolem</span><b>Aucune annulation, aucune instance ouverte.</b> Le portefeuille se résume à 1 instance close sans examen au fond. Une affaire a été jugée en plusieurs étapes, étalées sur <span class="nw">8 mois</span>&#8239;: l’état affiché est celui de sa décision la plus récente.</div><div class="aff"><div class="aff-tete"><span class="num">21DA02246</span><span class="cour">CAA Douai</span><span class="etapes">2 décisions</span><span class="issue i-clos">Instance close sans examen au fond</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-clos" style="left:27.24%;right:58.64%"></span><span class="pt p-clos" style="left:27.24%" data-i="0" role="presentation"></span><span class="pt p-clos pt-last" style="left:41.36%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21DA02246_20230323.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21DA02246_20230323.xml" title="Ouvrir DCA_21DA02246_20230323.xml sur l’open data du Conseil d’État">23 mars 2023</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/ORCA_21DA02246_20231109.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="ORCA_21DA02246_20231109.xml" title="Ouvrir ORCA_21DA02246_20231109.xml sur l’open data du Conseil d’État">9 nov. 2023</a><span class="fg">ordonnance</span><span class="retenu">état retenu</span></li></ul></div></div></article><div class="bande" data-sit="maintien"><h3>Autorisations maintenues</h3><span class="cpt">2 / 20</span><p>Toutes les affaires se terminent sur un maintien de l’autorisation.</p></div><article class="pf" id="spv-p1" data-sit="maintien">
+ <div class="rail-pf"><h4>SPV P1</h4><p class="op">Opérateur P</p>
+  <p class="cnt">2 affaires · 3 décisions</p><span class="barre" role="presentation"><span class="seg s-maintien" style="flex:2"></span></span><p class="releve"><span class="t-maintien">2 maintenues</span></p><div class="mks"><span class="mk">1 affaire en plusieurs étapes</span></div></div>
+ <div class="corps"><div class="lecture lecture-maintien"><span class="lab">Lecture Kolem</span><b>Aucune annulation, aucune instance ouverte.</b> Les 2 affaires se terminent sur un maintien de l’autorisation. Une affaire a été jugée en plusieurs étapes, étalées sur <span class="nw">1 an et 7 mois</span>&#8239;: l’état affiché est celui de sa décision la plus récente.</div><div class="aff"><div class="aff-tete"><span class="num">21BX04076</span><span class="cour">CAA Bordeaux</span><span class="etapes">2 décisions</span><span class="issue i-maintien">Autorisation maintenue</span></div><div class="axe"><span class="rule"></span><span class="lien-t l-maintien" style="left:41.23%;right:22.72%"></span><span class="pt p-maintien" style="left:41.23%" data-i="0" role="presentation"></span><span class="pt p-maintien pt-last" style="left:77.28%" data-i="1" role="presentation"></span><span class="axe-cap" title="Arrêt du corpus — 26 juin 2026"></span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21BX04076_20231107.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21BX04076_20231107.xml" title="Ouvrir DCA_21BX04076_20231107.xml sur l’open data du Conseil d’État">7 nov. 2023</a></li><li data-i="1"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21BX04076_20250619.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21BX04076_20250619.xml" title="Ouvrir DCA_21BX04076_20250619.xml sur l’open data du Conseil d’État">19 juin 2025</a><span class="retenu">état retenu</span></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">21BX04089</span><span class="cour">CAA Bordeaux</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21BX04089_20250619.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21BX04089_20250619.xml" title="Ouvrir DCA_21BX04089_20250619.xml sur l’open data du Conseil d’État">19 juin 2025</a></li></ul></div></div></article><article class="pf" id="spv-b2" data-sit="maintien">
+ <div class="rail-pf"><h4>SPV B2</h4><p class="op">Opérateur B</p>
+  <p class="cnt">2 affaires · 2 décisions</p><span class="barre" role="presentation"><span class="seg s-maintien" style="flex:2"></span></span><p class="releve"><span class="t-maintien">2 maintenues</span></p></div>
+ <div class="corps"><div class="lecture lecture-maintien"><span class="lab">Lecture Kolem</span><b>Aucune annulation, aucune instance ouverte.</b> Les 2 affaires se terminent sur un maintien de l’autorisation.</div><div class="aff"><div class="aff-tete"><span class="num">21TL03190</span><span class="cour">CAA Toulouse</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21TL03190_20231221.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21TL03190_20231221.xml" title="Ouvrir DCA_21TL03190_20231221.xml sur l’open data du Conseil d’État">21 déc. 2023</a></li></ul></div><div class="aff"><div class="aff-tete"><span class="num">21TL03192</span><span class="cour">CAA Toulouse</span><span class="issue i-maintien">Autorisation maintenue</span></div><ul class="decs"><li data-i="0"><a class="dt" href="https://opendata.justice-administrative.fr/recherche/api/elastic/decisions/DCA_21TL03192_20231221.xml/bm9TZWNvbmR2YWx1ZQ==" target="_blank" rel="noopener" data-file="DCA_21TL03192_20231221.xml" title="Ouvrir DCA_21TL03192_20231221.xml sur l’open data du Conseil d’État">21 déc. 2023</a></li></ul></div></div></article><div class="bande" data-sit="aucune"><h3>Aucune décision</h3><span class="cpt">2 / 20</span><p>Aucune décision de cour administrative d’appel sur le périmètre et la période couverts.</p></div><article class="pf" id="spv-q1" data-sit="aucune">
+ <div class="rail-pf"><h4>SPV Q1</h4><p class="op">Opérateur Q</p>
+  <p class="cnt">aucune affaire</p><p class="releve"></p></div>
+ <div class="corps"><div class="lecture lecture-aucune"><span class="lab">Lecture Kolem</span>Aucune décision de cour administrative d’appel sur le périmètre et la période couverts. Ce constat vaut pour ce périmètre et jusqu’au 26 juin 2026, pas dans l’absolu.</div><div class="vide-axe"><span class="rule"></span></div><p class="vide-txt">Frise vide sur toute la période couverte. Ce résultat se lit par rapport au périmètre décrit en bas de page, et il ne préjuge d’aucun recours déposé et non encore jugé.</p></div></article><article class="pf" id="spv-q2" data-sit="aucune">
+ <div class="rail-pf"><h4>SPV Q2</h4><p class="op">Opérateur Q</p>
+  <p class="cnt">aucune affaire</p><p class="releve"></p></div>
+ <div class="corps"><div class="lecture lecture-aucune"><span class="lab">Lecture Kolem</span>Aucune décision de cour administrative d’appel sur le périmètre et la période couverts. Ce constat vaut pour ce périmètre et jusqu’au 26 juin 2026, pas dans l’absolu.</div><div class="vide-axe"><span class="rule"></span></div><p class="vide-txt">Frise vide sur toute la période couverte. Ce résultat se lit par rapport au périmètre décrit en bas de page, et il ne préjuge d’aucun recours déposé et non encore jugé.</p></div></article></section>
+<section class="sec rv" id="lexique" aria-labelledby="h-lex"><div class="sec-head"><h2 class="eyebrow" id="h-lex">Ce que chaque mot veut dire ici</h2><p>Section 5 sur 6</p></div><dl class="def"><dt><span class="pastille s-annul"></span>Autorisation annulée</dt><dd>La dernière décision identifiée pour l’affaire annule l’autorisation attaquée, en tout ou partie. Elle décrit ce que la cour a fait à l’acte&#8239;; elle ne dit rien de l’état d’avancement du projet.</dd><dt><span class="pastille s-maintien"></span>Autorisation maintenue</dt><dd>La dernière décision identifiée rejette les conclusions dirigées contre l’autorisation, ou la rétablit.</dd><dt><span class="pastille s-cours"></span>Instance non close</dt><dd>La dernière décision identifiée ne met pas fin à l’instance devant la cour, et aucune décision postérieure n’a été retrouvée jusqu’au 26 juin 2026. Ce sont les seules lignes de cette page qui appellent une vérification à date.</dd><dt><span class="pastille s-clos"></span>Instance close sans examen au fond</dt><dd>Désistement, non-lieu, irrecevabilité&#8239;: l’instance s’achève sans que la cour se prononce sur la légalité de l’autorisation.</dd><dt><span class="pastille s-indet"></span>Issue non caractérisée</dt><dd>La décision existe et son fichier source est fourni, mais l’effet sur l’autorisation n’a pas été qualifié avec un niveau de confiance suffisant. Rien n’est deviné&#8239;: la case reste ouverte.</dd><dt>État retenu</dt><dd>Sur une affaire jugée en plusieurs fois, l’état affiché est celui de la décision la plus récente identifiée au corpus pour cette affaire, signalée par le cercle plein sur la frise. Ce n’est pas un jugement sur l’autorité de la chose jugée&#8239;: c’est le dernier état connu à la date d’arrêt du corpus.</dd><dt>Pourvoi CE</dt><dd>Le fichier source de la décision mentionne un pourvoi formé devant le Conseil d’État. Le marqueur porte sur la mention, pas sur son issue.</dd><dt>Suite au CE identifiée</dt><dd>Une suite au pourvoi a été retrouvée dans le corpus et rattachée à l’affaire. Le marqueur signale l’existence de cette suite et rien d’autre&#8239;: il ne dit pas dans quel sens le Conseil d’État a statué, et il ne porte pas sur l’instance devant la cour d’appel. Une affaire peut porter ce marqueur et rester non close.</dd><dt>Réinstruction ordonnée · injonction de délivrer</dt><dd>La cour a assorti sa décision d’une injonction à l’administration. Reprise ici telle qu’elle figure au fichier source, sans interprétation de son exécution.</dd><dt>Ordonnance</dt><dd>La décision a été rendue par ordonnance plutôt que par arrêt. Le marqueur reprend la nature de l’acte telle qu’elle figure au fichier source&#8239;; il ne préjuge pas de son motif.</dd></dl></section>
+<section class="sec rv" id="perimetre" aria-labelledby="h-per"><div class="sec-head"><h2 class="eyebrow" id="h-per">Périmètre et limites</h2><p>Section 6 sur 6</p></div><dl class="def"><dt>Fait et lecture, séparés</dt><dd>Tout ce qui figure sous un numéro d’affaire (cour, dates, mentions, liens) est repris du fichier source. Le bloc <em>Lecture Kolem</em> est une synthèse produite par Kolem à partir de ces faits. Les deux ne sont jamais mélangés, et la synthèse se vérifie ligne à ligne contre les faits qui la suivent.</dd><dt>Recensement, pas purge des recours</dt><dd>Cette page recense les décisions rendues et publiées. Elle n’établit pas que les délais de recours sont expirés ni qu’aucune instance n’est pendante&#8239;: un recours déposé et non encore jugé n’y figure pas. L’absence de décision ne vaut donc pas absence de contentieux.</dd><dt>Cours administratives d’appel, éolien terrestre</dt><dd>Les tribunaux administratifs ne sont pas couverts. Le corpus de référence est l’éolien terrestre, pour lequel la cour administrative d’appel statue en premier et dernier ressort. Une société présentée sans décision est sans décision <em>dans ce périmètre</em>.</dd><dt>Issue juridique, pas état du projet</dt><dd>L’issue décrit ce que la cour a fait à l’autorisation attaquée. Le recours n’étant pas suspensif, un projet dont l’autorisation est annulée peut être en construction ou en exploitation, et inversement. La suspension d’exécution n’est pas un champ extrait à ce jour.</dd><dt>Arrêt du corpus</dt><dd>Le corpus est arrêté au 26 juin 2026. Rien de postérieur à cette date n’y figure, et toute absence ne vaut que jusque-là. Dans les vingt portefeuilles présentés, la décision la plus récente est du 10 juin 2026. Page générée le 12 août 2026.</dd><dt>Délai de publication</dt><dd>L’open data ne publie pas les décisions le jour de leur prononcé. Une décision rendue peu avant l’arrêt du corpus peut n’y être pas encore versée. L’absence de décision sur les dernières semaines couvertes doit donc être lue avec cette réserve&#8239;; un rafraîchissement du corpus la lève.</dd><dt>Sources</dt><dd>Open data de la justice administrative, publié par le Conseil d’État. Chaque date de cette page ouvre le fichier correspondant dans son format d’origine. Aucune donnée n’a été transmise par un tiers pour produire cette démonstration.</dd></dl></section>
+</main>
+<section class="band cta" id="suite" aria-labelledby="h-cta">
+ <div class="wrap">
+  <h2 id="h-cta">La même page, sur vos sociétés</h2>
+  <p class="lede">Envoyez une liste de sociétés de projet&#8239;: un tableur, une liste de SIREN ou une simple
+  liste de noms. Kolem reconstitue le corpus correspondant à partir des sources publiques et rend le même
+  document, nominatif, sur votre périmètre. <b>Cinq sociétés suffisent pour un premier retour.</b></p>
+  <div class="duo-cta">
+   <div><h3>Ce que vous recevez</h3><ul>
+    <li>Les décisions rattachées à chaque société, regroupées par affaire</li>
+    <li>L’état de chaque affaire au dernier état identifié, et sa chronologie</li>
+    <li>Les affaires qu’aucune décision ne clôt</li>
+    <li>Les sociétés sans décision, avec le périmètre auquel cette absence se rapporte</li>
+    <li>Le lien vers le fichier source de chaque ligne</li></ul></div>
+   <div><h3>Ce que Kolem ne fait pas</h3><ul>
+    <li>Aucun score de risque&#8239;: la donnée contentieuse ne permet pas de le calculer</li>
+    <li>Aucun avis juridique&#8239;: Kolem restitue des faits, il ne les qualifie pas</li>
+    <li>Aucune affirmation qui ne soit vérifiable dans un fichier public</li></ul></div>
+  </div>
+  <p class="contact"><a class="pri" href="mailto:contact@kolem.fr?subject=Reconstitution%20d%E2%80%99un%20portefeuille&body=Bonjour%2C%0A%0ASoci%C3%A9t%C3%A9s%20de%20projet%20%C3%A0%20reconstituer%20%28un%20nom%20ou%20un%20SIREN%20par%20ligne%2C%20cinq%20suffisent%29%20%3A%0A1.%0A2.%0A3.%0A4.%0A5.%0A%0AOp%C3%A9rateur%20ou%20groupe%2C%20si%20vous%20le%20connaissez%20%3A%0A%0AContexte%2C%20facultatif%20%28acquisition%2C%20refinancement%2C%20veille%2C%20autre%29%20%3A%0A%0AMerci%2C%0A">Envoyer une liste de sociétés</a><a href="https://kolem.fr">kolem.fr</a></p>
+  <p class="contact-note">Le lien ouvre un message pré-rempli&#8239;: il ne reste qu’à coller les noms.</p>
+ </div></section>
+<div class="wrap"><footer><b>Kolem</b><span>Démonstration sur sources publiques</span>
+<span>Corpus arrêté au 26 juin 2026</span><span>Page générée le 12 août 2026</span></footer></div>
+<script>
+(function(){
+  var btns=[].slice.call(document.querySelectorAll('.fl')),
+      pfs=[].slice.call(document.querySelectorAll('.pf')),
+      bandes=[].slice.call(document.querySelectorAll('.bande')),
+      rows=[].slice.call(document.querySelectorAll('table.idx tbody tr'));
+  function apply(f){
+    btns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.f===f?'true':'false')});
+    function m(el){return f==='tous'||el.dataset.sit===f}
+    pfs.forEach(function(p){p.hidden=!m(p)});
+    rows.forEach(function(r){r.hidden=!m(r)});
+    bandes.forEach(function(b){b.hidden=!m(b)});
+  }
+  btns.forEach(function(b){b.addEventListener('click',function(){apply(b.dataset.f)})});
+  document.querySelectorAll('table.idx .lien').forEach(function(a){
+    a.addEventListener('click',function(){apply('tous')})});
+  document.querySelectorAll('.aff,.duo section').forEach(function(aff){
+    var pts=aff.querySelectorAll('.pt'),lis=aff.querySelectorAll('.decs li');
+    lis.forEach(function(li){
+      var p=pts[+li.dataset.i]; if(!p)return;
+      function on(){p.classList.add('hi')} function off(){p.classList.remove('hi')}
+      li.addEventListener('mouseenter',on); li.addEventListener('mouseleave',off);
+      var a=li.querySelector('a'); if(a){a.addEventListener('focus',on);a.addEventListener('blur',off)}
+    });
+  });
+  if(!(CSS.supports&&CSS.supports('animation-timeline','view()'))){
+    document.querySelectorAll('.rv>.sec-head,.rv .co,.rv .duo>section,.rv .repart,.rv .filtres,.rv dl.def>dt,.rv dl.def>dd,.bento .bt')
+      .forEach(function(x){x.style.opacity=1;x.style.transform='none'});
+  }
+})();
+</script>
+</body>
+</html>
