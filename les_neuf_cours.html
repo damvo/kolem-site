@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les neuf cours</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#e9edf1;
+  --surface:#ffffff;
+  --surface-2:#f3f6f8;
+  --ink:#151e28;
+  --ink-2:#3d4d5b;
+  --muted:#5d6e7d;
+  --rule:#ccd6de;
+  --rule-strong:#a9b8c4;
+  --accent:#8a3236;
+  --accent-soft:#c58d8f;
+  --cool:#2f6076;
+  --shadow:0 1px 0 rgba(21,30,40,.05), 0 8px 24px -18px rgba(21,30,40,.45);
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"Public Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#111820;
+    --surface:#18212b;
+    --surface-2:#1e2934;
+    --ink:#e7edf2;
+    --ink-2:#c3cfd9;
+    --muted:#8ea0ae;
+    --rule:#2a3742;
+    --rule-strong:#3d4d5a;
+    --accent:#d98d90;
+    --accent-soft:#7d4145;
+    --cool:#79b0c6;
+    --shadow:0 1px 0 rgba(0,0,0,.3), 0 10px 28px -20px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#111820;
+  --surface:#18212b;
+  --surface-2:#1e2934;
+  --ink:#e7edf2;
+  --ink-2:#c3cfd9;
+  --muted:#8ea0ae;
+  --rule:#2a3742;
+  --rule-strong:#3d4d5a;
+  --accent:#d98d90;
+  --accent-soft:#7d4145;
+  --cool:#79b0c6;
+  --shadow:0 1px 0 rgba(0,0,0,.3), 0 10px 28px -20px rgba(0,0,0,.9);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:900px; margin:0 auto; padding:0 22px 72px}
+
+/* ---------- masthead ---------- */
+.masthead{padding:52px 0 26px; border-bottom:2px solid var(--ink); display:flex; flex-direction:column; gap:14px}
+.eyebrow{
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); display:flex; flex-wrap:wrap; gap:10px; align-items:baseline;
+}
+.eyebrow span::before{content:"·"; margin-right:10px; color:var(--rule-strong)}
+.eyebrow span:first-child::before{content:none; margin:0}
+h1{
+  font-family:var(--serif); font-weight:600; font-size:clamp(2.6rem,7vw,4.1rem);
+  line-height:1.02; margin:0; letter-spacing:-.015em; text-wrap:balance;
+}
+.chapeau{
+  font-family:var(--serif); font-size:clamp(1.05rem,2.4vw,1.28rem); line-height:1.5;
+  color:var(--ink-2); max-width:60ch; margin:0;
+}
+.chapeau em{font-style:italic; color:var(--ink)}
+
+/* ---------- recherche ---------- */
+.chercher{
+  margin-top:34px; background:var(--surface); border:1px solid var(--rule);
+  box-shadow:var(--shadow); padding:26px;
+}
+.chercher h2{
+  font-family:var(--serif); font-weight:600; font-size:1.5rem; margin:0 0 4px;
+  letter-spacing:-.01em;
+}
+.chercher p.aide{margin:0 0 18px; font-size:13.5px; color:var(--muted)}
+.champ{display:flex; gap:10px; flex-wrap:wrap}
+input[type="text"]{
+  flex:1 1 260px; min-width:0; font-family:var(--mono); font-size:15px;
+  padding:12px 14px; color:var(--ink); background:var(--surface-2);
+  border:1px solid var(--rule-strong); border-radius:0;
+}
+input[type="text"]:focus{outline:2px solid var(--accent); outline-offset:1px}
+input[type="text"]::placeholder{color:var(--muted); font-family:var(--sans)}
+
+.resultat{margin-top:20px; border-top:1px solid var(--rule); padding-top:20px; display:none}
+.resultat.actif{display:block}
+.resultat .dept{
+  font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); margin:0 0 6px;
+}
+.resultat .cour-nom{font-family:var(--serif); font-size:2rem; font-weight:600; margin:0; line-height:1.1}
+.resultat .cour-sub{margin:4px 0 18px; font-size:13.5px; color:var(--muted)}
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:var(--rule)}
+.stat{background:var(--surface); padding:14px 16px}
+.stat .k{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:6px}
+.stat .v{font-family:var(--serif); font-size:1.9rem; font-weight:600; line-height:1; font-variant-numeric:tabular-nums}
+.stat .u{font-size:.8rem; font-weight:400; color:var(--muted); margin-left:2px}
+.alerte-n{
+  margin-top:14px; border-left:3px solid var(--accent); background:var(--surface-2);
+  padding:10px 14px; font-size:13px; color:var(--ink-2);
+}
+
+/* ---------- registre ---------- */
+.section-titre{
+  display:flex; align-items:baseline; justify-content:space-between; gap:16px;
+  margin:56px 0 6px; padding-bottom:8px; border-bottom:1px solid var(--rule-strong); flex-wrap:wrap;
+}
+.section-titre h2{font-family:var(--serif); font-weight:600; font-size:1.75rem; margin:0; letter-spacing:-.01em}
+.section-titre .note{font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+
+.registre{list-style:none; margin:0; padding:0}
+.ligne{
+  display:grid; grid-template-columns:minmax(160px,1.15fr) minmax(0,2fr) auto;
+  gap:18px; align-items:center; padding:16px 12px 16px 0; border-bottom:1px solid var(--rule);
+  transition:background .18s ease;
+}
+.ligne.cible{background:var(--surface); box-shadow:inset 3px 0 0 var(--accent); padding-left:12px}
+.ligne .nom{font-family:var(--serif); font-size:1.22rem; font-weight:600; margin:0; line-height:1.15}
+.ligne .ta{font-family:var(--mono); font-size:10.5px; color:var(--muted); letter-spacing:.04em; margin-top:3px; display:block}
+.puce-n{
+  display:inline-block; margin-left:8px; vertical-align:middle;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--accent); border:1px solid var(--accent-soft); padding:1px 5px;
+}
+.jauge{position:relative; height:26px; background:var(--surface-2); border:1px solid var(--rule)}
+.jauge .barre{position:absolute; inset:0 auto 0 0; background:var(--accent); opacity:.86}
+.jauge .barre.faible{
+  background:repeating-linear-gradient(135deg,var(--accent),var(--accent) 4px,var(--accent-soft) 4px,var(--accent-soft) 8px);
+}
+.jauge .etiquette{
+  /* pastille opaque : la barre peut passer dessous sans masquer le chiffre */
+  position:absolute; right:5px; top:50%; transform:translateY(-50%);
+  font-family:var(--mono); font-size:12px; font-variant-numeric:tabular-nums; color:var(--ink-2);
+  background:var(--surface); padding:2px 5px; box-shadow:0 0 0 1px var(--rule);
+}
+.ligne .droite{text-align:right; min-width:120px}
+.ligne .droite .d{font-family:var(--mono); font-size:13px; font-variant-numeric:tabular-nums; display:block}
+.ligne .droite .n{font-family:var(--mono); font-size:10.5px; color:var(--muted); letter-spacing:.05em}
+.axe{
+  display:grid; grid-template-columns:minmax(160px,1.15fr) minmax(0,2fr) auto;
+  gap:18px; font-family:var(--mono); font-size:10.5px; text-transform:uppercase;
+  color:var(--muted); letter-spacing:.08em; padding:8px 12px 0 0;
+}
+.axe .bornes{display:flex; justify-content:space-between; gap:8px}
+.axe .droite{text-align:right; min-width:120px}
+.legende{
+  margin-top:16px; font-size:13px; color:var(--muted); max-width:64ch;
+}
+
+/* ---------- prose ---------- */
+.prose{margin-top:52px; max-width:64ch}
+.prose h2{font-family:var(--serif); font-weight:600; font-size:1.4rem; margin:0 0 10px; letter-spacing:-.01em}
+.prose p{margin:0 0 14px; color:var(--ink-2); font-size:15px}
+.prose p:last-child{margin-bottom:0}
+.prose .bloc{border-left:2px solid var(--rule-strong); padding-left:18px; margin-bottom:30px}
+.prose strong{color:var(--ink)}
+
+footer{margin-top:56px; padding-top:20px; border-top:2px solid var(--ink); font-size:13px; color:var(--muted); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap}
+footer a{color:var(--accent); text-decoration:none; border-bottom:1px solid var(--accent-soft)}
+footer a:hover{border-bottom-color:var(--accent)}
+
+@media (max-width:640px){
+  .ligne{grid-template-columns:1fr auto; gap:10px}
+  .jauge{grid-column:1 / -1}
+  .axe{grid-template-columns:1fr auto}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">
+      <span>Kolem</span><span>Contentieux des projets EnR</span><span id="borne">Corpus arrêté au 26 juin 2026</span>
+    </div>
+    <h1>Les neuf cours</h1>
+    <p class="chapeau">Pour un ouvrage photovoltaïque de 5 MW ou plus, les actes relevant du nouveau régime pris à compter du 1<sup>er</sup> juillet 2026 relèvent de la cour administrative d'appel, <em>en premier et dernier ressort</em>. Vous ne choisissez pas laquelle. Voici ce que ces mêmes cours ont fait de l'éolien depuis quatre ans.</p>
+  </header>
+
+  <section class="chercher">
+    <h2>Quelle cour jugera votre projet&nbsp;?</h2>
+    <p class="aide">Le département d'implantation détermine le tribunal administratif, qui détermine la cour. Tapez un numéro ou un nom&nbsp;: 62, Morbihan, Haute-Garonne.</p>
+    <div class="champ">
+      <input type="text" id="q" list="depts" placeholder="Département d'implantation" autocomplete="off" aria-label="Département d'implantation">
+      <datalist id="depts"></datalist>
+    </div>
+    <div class="resultat" id="res" aria-live="polite">
+      <p class="dept" id="res-dept"></p>
+      <p class="cour-nom" id="res-cour"></p>
+      <p class="cour-sub" id="res-ressort"></p>
+      <div class="stats" id="res-stats"></div>
+      <p class="alerte-n" id="res-alerte" hidden></p>
+    </div>
+  </section>
+
+  <div class="section-titre">
+    <h2>Le registre</h2>
+    <span class="note" id="note-registre">Éolien terrestre · 865 affaires jugées au fond</span>
+  </div>
+  <ul class="registre" id="registre"></ul>
+  <div class="axe">
+    <span>Cour · ressort</span>
+    <span class="bornes"><span>0 %</span><span>Part des affaires où l'arrêté est annulé</span><span>50 %</span></span>
+    <span class="droite">Annulations · affaires</span>
+  </div>
+  <p class="legende" id="legende"></p>
+
+  <div class="prose">
+    <div class="bloc">
+      <h2>Ce que ce tableau dit</h2>
+      <p>Dans ce corpus, la part des affaires où l'arrêté préfectoral est annulé varie de <strong>15,2 % à Lyon et Toulouse à 39,6 % à Douai</strong>. Marseille atteint 45,5 %, mais sur seulement 11 affaires. Ces écarts sont descriptifs : ils ne constituent pas une estimation du risque contentieux d'un projet solaire.</p>
+      <p>Ce qu'ils montrent est une hétérogénéité observée entre les neuf ressorts sur quatre ans de contentieux éolien. Ils ne mesurent pas la sévérité d'une cour, qui supposerait de comparer des dossiers comparables.</p>
+      <p>Deux projets solaires identiques ne tomberont pas nécessairement devant la même cour : le ressort territorial dépend du lieu du projet. Le juge devient donc une donnée à connaître avant d'analyser son propre risque contentieux.</p>
+    </div>
+    <div class="bloc">
+      <h2>Ce qu'il ne dit pas</h2>
+      <p>Ces chiffres sont ceux de l'éolien terrestre. Le photovoltaïque au sol produit un contentieux différent, davantage urbanisme et agricole que paysage et espèces protégées. Rien ne garantit que les écarts se reproduisent à l'identique. <strong>Ce qui se transpose, c'est le juge, pas le taux.</strong></p>
+      <p>Il ne dit rien non plus du sort des projets. Une annulation n'est pas la fin d'un dossier, et un arrêté maintenu n'est pas une mise en service.</p>
+      <p>Il ne dit rien des délais. Le corpus ne porte aucune date de requête ni de saisine : la durée d'une instance n'y est pas mesurable, et aucun délai n'est publié ici.</p>
+    </div>
+    <div class="bloc">
+      <h2>Méthode</h2>
+      <p>Décisions publiques de la justice administrative, cours administratives d'appel, avril&nbsp;2022 à juin&nbsp;2026&nbsp;— la borne basse est subie, la publication systématique des arrêts de CAA en open data commence en avril 2022.</p>
+      <p>Chaîne de population&nbsp;: <strong>1 068 décisions</strong> au corpus, dont 149 ordonnances écartées, soit 919 décisions au fond&nbsp;; <strong>916</strong> après exclusion des dossiers hors éolien&nbsp;; agrégées en <strong>865 affaires</strong>, une affaire étant un numéro de dossier, la dernière décision faisant foi. <strong>220</strong> affaires se terminent par l'annulation de l'arrêté préfectoral.</p>
+      <p>Chaque part est affichée avec son effectif, et le dénominateur de chaque ligne est celui de cette ligne. Les cours de moins de trente affaires sont signalées comme telles&nbsp;: sur onze affaires, un point de pourcentage n'a pas de sens. L'objet annulé est lu dans le dispositif de l'arrêt, jamais dans son intitulé.</p>
+      <p>Le ressort des cours suit les articles R.&nbsp;221-3 et R.&nbsp;221-7 du code de justice administrative. Le transfert de compétence résulte de l'article R.&nbsp;311-5 du même code, issu du décret n°&nbsp;2026-302 du 21 avril 2026.</p>
+    </div>
+  </div>
+
+  <footer>
+    <span>Kolem — analyse des risques environnementaux et réglementaires des projets EnR</span>
+    <a href="https://kolem.fr">kolem.fr</a>
+  </footer>
+</div>
+
+<script>
+/* =========================================================================
+   Chiffres arrêtés par la requête R2 — snapshot au 26/06/2026, corpus figé.
+   Taux PAR AFFAIRE. Effectif obligatoire à côté de chaque taux.
+   ========================================================================= */
+const CORPUS = {
+  decisions: 1068,      // lignes du corpus, ordonnances comprises
+  horsOrca: 919,        // décisions au fond
+  apresSecteur: 916,    // après exclusion des dossiers hors éolien
+  affaires: 865,        // après agrégation par numéro de dossier
+  annulations: 220,
+  borne: "26 juin 2026"
+};
+
+const SEUIL_FAIBLE = 30;   // en deçà, l'effectif est signalé
+
+const COURS = {
+  "Marseille":  { code:"CAA13", ta:["Bastia","Marseille","Nice","Toulon"],                  affaires:11,  annulations:5,  taux:45.5 },
+  "Douai":      { code:"CAA59", ta:["Amiens","Lille","Rouen"],                              affaires:164, annulations:65, taux:39.6 },
+  "Versailles": { code:"CAA78", ta:["Versailles","Cergy-Pontoise","Orléans"],               affaires:27,  annulations:9,  taux:33.3 },
+  "Nancy":      { code:"CAA54", ta:["Besançon","Châlons-en-Champagne","Nancy","Strasbourg"],affaires:78,  annulations:21, taux:26.9 },
+  "Bordeaux":   { code:"CAA33", ta:["Bordeaux","Limoges","Pau","Poitiers"],                 affaires:246, annulations:66, taux:26.8 },
+  "Nantes":     { code:"CAA44", ta:["Caen","Nantes","Rennes"],                              affaires:126, annulations:22, taux:17.5 },
+  "Toulouse":   { code:"CAA31", ta:["Toulouse","Montpellier","Nîmes"],                      affaires:79,  annulations:12, taux:15.2 },
+  "Lyon":       { code:"CAA69", ta:["Clermont-Ferrand","Dijon","Grenoble","Lyon"],          affaires:132, annulations:20, taux:15.2 },
+  "Paris":      { code:"CAA75", ta:["Paris","Melun","Montreuil"],                           affaires:2,   annulations:0,  taux:0.0 }
+};
+
+/* Département → cour. Ressort issu des articles R. 221-3 et R. 221-7 CJA. */
+const DEPTS = [
+["01","Ain","Lyon"],["02","Aisne","Douai"],["03","Allier","Lyon"],["04","Alpes-de-Haute-Provence","Marseille"],
+["05","Hautes-Alpes","Marseille"],["06","Alpes-Maritimes","Marseille"],["07","Ardèche","Lyon"],["08","Ardennes","Nancy"],
+["09","Ariège","Toulouse"],["10","Aube","Nancy"],["11","Aude","Toulouse"],["12","Aveyron","Toulouse"],
+["13","Bouches-du-Rhône","Marseille"],["14","Calvados","Nantes"],["15","Cantal","Lyon"],["16","Charente","Bordeaux"],
+["17","Charente-Maritime","Bordeaux"],["18","Cher","Versailles"],["19","Corrèze","Bordeaux"],["2A","Corse-du-Sud","Marseille"],
+["2B","Haute-Corse","Marseille"],["21","Côte-d'Or","Lyon"],["22","Côtes-d'Armor","Nantes"],["23","Creuse","Bordeaux"],
+["24","Dordogne","Bordeaux"],["25","Doubs","Nancy"],["26","Drôme","Lyon"],["27","Eure","Douai"],
+["28","Eure-et-Loir","Versailles"],["29","Finistère","Nantes"],["30","Gard","Toulouse"],["31","Haute-Garonne","Toulouse"],
+["32","Gers","Bordeaux"],["33","Gironde","Bordeaux"],["34","Hérault","Toulouse"],["35","Ille-et-Vilaine","Nantes"],
+["36","Indre","Bordeaux"],["37","Indre-et-Loire","Versailles"],["38","Isère","Lyon"],["39","Jura","Nancy"],
+["40","Landes","Bordeaux"],["41","Loir-et-Cher","Versailles"],["42","Loire","Lyon"],["43","Haute-Loire","Lyon"],
+["44","Loire-Atlantique","Nantes"],["45","Loiret","Versailles"],["46","Lot","Toulouse"],["47","Lot-et-Garonne","Bordeaux"],
+["48","Lozère","Toulouse"],["49","Maine-et-Loire","Nantes"],["50","Manche","Nantes"],["51","Marne","Nancy"],
+["52","Haute-Marne","Nancy"],["53","Mayenne","Nantes"],["54","Meurthe-et-Moselle","Nancy"],["55","Meuse","Nancy"],
+["56","Morbihan","Nantes"],["57","Moselle","Nancy"],["58","Nièvre","Lyon"],["59","Nord","Douai"],
+["60","Oise","Douai"],["61","Orne","Nantes"],["62","Pas-de-Calais","Douai"],["63","Puy-de-Dôme","Lyon"],
+["64","Pyrénées-Atlantiques","Bordeaux"],["65","Hautes-Pyrénées","Bordeaux"],["66","Pyrénées-Orientales","Toulouse"],
+["67","Bas-Rhin","Nancy"],["68","Haut-Rhin","Nancy"],["69","Rhône","Lyon"],["70","Haute-Saône","Nancy"],
+["71","Saône-et-Loire","Lyon"],["72","Sarthe","Nantes"],["73","Savoie","Lyon"],["74","Haute-Savoie","Lyon"],
+["75","Paris","Paris"],["76","Seine-Maritime","Douai"],["77","Seine-et-Marne","Paris"],["78","Yvelines","Versailles"],
+["79","Deux-Sèvres","Bordeaux"],["80","Somme","Douai"],["81","Tarn","Toulouse"],["82","Tarn-et-Garonne","Toulouse"],
+["83","Var","Marseille"],["84","Vaucluse","Toulouse"],["85","Vendée","Nantes"],["86","Vienne","Bordeaux"],
+["87","Haute-Vienne","Bordeaux"],["88","Vosges","Nancy"],["89","Yonne","Lyon"],["90","Territoire de Belfort","Nancy"],
+["91","Essonne","Versailles"],["92","Hauts-de-Seine","Versailles"],["93","Seine-Saint-Denis","Paris"],
+["94","Val-de-Marne","Paris"],["95","Val-d'Oise","Versailles"]
+];
+
+/* ---------- rendu ---------- */
+const ECHELLE = 50;                                   // borne haute de l'axe, en %
+const fr = n => String(n).replace(".", ",");
+const pct = n => fr(n.toFixed(1)) + " %";
+const faible = c => c.affaires < SEUIL_FAIBLE;
+
+document.getElementById("borne").textContent = "Corpus arrêté au " + CORPUS.borne;
+document.getElementById("note-registre").textContent =
+  "Éolien terrestre · " + CORPUS.affaires + " affaires jugées au fond";
+document.getElementById("legende").textContent =
+  CORPUS.affaires + " affaires, " + CORPUS.annulations +
+  " annulations d'arrêté préfectoral. Les cours de moins de " + SEUIL_FAIBLE +
+  " affaires sont signalées : leur part se déplace de plusieurs points pour une seule décision.";
+
+const ordre = Object.entries(COURS).sort((a, b) => b[1].taux - a[1].taux || a[0].localeCompare(b[0], "fr"));
+
+const registre = document.getElementById("registre");
+for (const [nom, c] of ordre) {
+  const li = document.createElement("li");
+  li.className = "ligne";
+  li.id = "cour-" + nom;
+  const largeur = Math.min(100, (c.taux / ECHELLE) * 100);
+  const petit = faible(c);
+  li.innerHTML =
+    '<div><p class="nom">' + nom +
+      (petit ? '<span class="puce-n">n = ' + c.affaires + '</span>' : '') +
+    '</p><span class="ta">' + c.code + ' · TA ' + c.ta.join(" · ") + '</span></div>' +
+    '<div class="jauge">' +
+      '<div class="barre' + (petit ? ' faible' : '') + '" style="width:' + largeur.toFixed(1) + '%"></div>' +
+      '<span class="etiquette">' + pct(c.taux) + '</span>' +
+    '</div>' +
+    '<div class="droite">' +
+      '<span class="d">' + c.annulations + ' / ' + c.affaires + '</span>' +
+      '<span class="n">annul. / affaires</span>' +
+    '</div>';
+  registre.appendChild(li);
+}
+
+/* ---------- recherche par département ---------- */
+const dl = document.getElementById("depts");
+DEPTS.forEach(([code, nom]) => {
+  const o = document.createElement("option");
+  o.value = code + " — " + nom;
+  dl.appendChild(o);
+});
+
+const sansAccent = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+function trouver(saisie) {
+  const brut = saisie.trim();
+  if (!brut) return null;
+  const codeSaisi = brut.split("—")[0].trim().toUpperCase();
+  let hit = DEPTS.find(d => d[0] === codeSaisi || d[0] === codeSaisi.padStart(2, "0"));
+  if (hit) return hit;
+  const q = sansAccent(brut);
+  if (q.length < 2) return null;
+  return DEPTS.find(d => sansAccent(d[1]) === q)
+      || DEPTS.find(d => sansAccent(d[0] + d[1]).includes(q))
+      || DEPTS.find(d => sansAccent(d[1]).startsWith(q))
+      || null;
+}
+
+const res = document.getElementById("res");
+const statsEl = document.getElementById("res-stats");
+const alerteEl = document.getElementById("res-alerte");
+
+function carte(k, v, unite) {
+  return '<div class="stat"><span class="k">' + k + '</span><span class="v">' + v +
+         (unite ? '<span class="u">' + unite + '</span>' : '') + '</span></div>';
+}
+
+function afficher(hit) {
+  document.querySelectorAll(".ligne.cible").forEach(el => el.classList.remove("cible"));
+  if (!hit) { res.classList.remove("actif"); return; }
+  const [code, nomDept, nomCour] = hit;
+  const c = COURS[nomCour];
+  document.getElementById("res-dept").textContent = code + " · " + nomDept;
+  document.getElementById("res-cour").textContent = "Cour administrative d'appel de " + nomCour;
+  document.getElementById("res-ressort").textContent = c.code + " — ressort : TA " + c.ta.join(", ") + ".";
+  statsEl.innerHTML =
+    carte("Part des affaires où l'arrêté est annulé", pct(c.taux)) +
+    carte("Affaires jugées au fond", c.affaires) +
+    carte("Annulations d'arrêté", c.annulations);
+  if (faible(c)) {
+    alerteEl.textContent = "Effectif faible : " + c.affaires + " affaires seulement. " +
+      "Une décision de plus ou de moins déplace cette part de plusieurs points — à lire comme un ordre de grandeur, pas comme un taux.";
+    alerteEl.hidden = false;
+  } else {
+    alerteEl.hidden = true;
+  }
+  res.classList.add("actif");
+  const ligne = document.getElementById("cour-" + nomCour);
+  if (ligne) ligne.classList.add("cible");
+}
+
+const q = document.getElementById("q");
+q.addEventListener("input", () => afficher(trouver(q.value)));
+q.addEventListener("change", () => afficher(trouver(q.value)));
+</script>
+</body>
+</html>
